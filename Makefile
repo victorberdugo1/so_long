@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/16 17:28:32 by vberdugo         ###   ########.fr        #
+#    Updated: 2024/09/19 12:27:57 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ $(LIBFT):
 $(MINI):
 	@make -C MLX42/build 
 
-%.o: %.c inc/so_long.h
+%.o: %.c inc/so_long.h 
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
@@ -49,9 +49,8 @@ clean:
 
 fclean: clean
 	rm -f $(NAME) 
-	$(MAKE) -C libft clean
-	$(MAKE) -C MLX42 clean
-
+	$(MAKE) -C libft fclean
+	rm -f $(MINI_LIB)
 
 re: fclean all
 

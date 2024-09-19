@@ -6,20 +6,18 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/16 11:31:19 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:48:08 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "inc/MLX42.h"
+#include "so_long.h"
 #define WIDTH 512
 #define HEIGHT 512
 
 static mlx_image_t* image;
-
-// -----------------------------------------------------------------------------
 
 int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
@@ -60,13 +58,11 @@ void ft_hook(void* param)
 		image->instances[0].x += 5;
 }
 
-// -----------------------------------------------------------------------------
 
 int32_t main(void)
 {
 	mlx_t* mlx;
 
-	// Gotta error check this stuff
 	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
 	{
 		puts(mlx_strerror(mlx_errno));
