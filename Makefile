@@ -1,4 +1,4 @@
-# **************************************************************************** #
+#**************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/19 12:27:57 by vberdugo         ###   ########.fr        #
+#    Updated: 2024/09/19 13:45:34 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME = so_long
 LIBFT = libft/libft.a
 
 MINI = MLX42/build/libmlx42.a
+MINI_BACKUP = $(MINI).backup
 
 INCLUDE = libft/libft.h lib/so_long.h
 
@@ -44,13 +45,15 @@ $(MINI):
 
 clean:
 	rm -f $(OBJ) $(TEST_OBJ)
-	$(MAKE) -C libft clean
-	$(MAKE) -C MLX42/build clean
+	@cp $(MINI) $(MINI_BACKUP)
+	@make -C libft clean
+	@make -C MLX42/build clean
+	@mv $(MINI_BACKUP) $(MINI)
 
 fclean: clean
 	rm -f $(NAME) 
 	$(MAKE) -C libft fclean
-	rm -f $(MINI_LIB)
+	rm -f $(MINI)
 
 re: fclean all
 

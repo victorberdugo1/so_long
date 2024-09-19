@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/19 12:50:56 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/19 13:06:31 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 # define SO_LONG_H
 
 # include <stdlib.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <string.h>
 # include "libft/libft.h"
 # include "MLX42/include/MLX42/MLX42.h"
 
