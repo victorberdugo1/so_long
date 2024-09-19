@@ -6,16 +6,16 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/19 12:48:08 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:00:06 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 #include "so_long.h"
-#define WIDTH 512
-#define HEIGHT 512
 
 static mlx_image_t* image;
 
@@ -62,6 +62,11 @@ void ft_hook(void* param)
 int32_t main(void)
 {
 	mlx_t* mlx;
+    mlx_texture_t* texture = NULL;
+    mlx_image_t* img;
+	char	*relative_path = "./textures/sheet.png";
+	//int32_t		img_width = 576;
+	//int32_t		img_height = 384;
 
 	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
 	{
@@ -80,11 +85,46 @@ int32_t main(void)
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	
+
+
+// Load texture from file
+    texture = mlx_load_png(relative_path); // Corrected to use one argument
+    if (!texture)
+    {
+        mlx_close_window(mlx);
+        puts(mlx_strerror(mlx_errno));
+        return(EXIT_FAILURE);
+    }
+
+    // Convert texture to an image
+    img = mlx_texture_to_image(mlx, texture);
+    if (!img)
+    {
+        mlx_delete_texture(texture); // Clean up texture
+        mlx_close_window(mlx);
+        puts(mlx_strerror(mlx_errno));
+        return(EXIT_FAILURE);
+    }
+
+    // Display the texture image
+    if (mlx_image_to_window(mlx, img, 0, 0) < 0)
+    {
+        mlx_delete_image(mlx, img);  // Corrected to include mlx
+        mlx_delete_texture(texture);
+        mlx_close_window(mlx);
+        puts(mlx_strerror(mlx_errno));
+        return(EXIT_FAILURE);
+    }
+
+
 	mlx_loop_hook(mlx, ft_randomize, mlx);
 	mlx_loop_hook(mlx, ft_hook, mlx);
 
 	mlx_loop(mlx);
+
+	// Cleanup
+	mlx_delete_image(mlx, img);
+	mlx_delete_texture(texture);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }

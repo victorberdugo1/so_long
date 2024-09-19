@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/19 13:06:31 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:27:18 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define LONG_MIN -2147483648L
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
+# define WIDTH 512
+# define HEIGHT 512
 
 typedef struct s_map
 {
