@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/19 13:45:34 by vberdugo         ###   ########.fr        #
+#    Updated: 2024/09/21 11:46:16 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ $(LIBFT):
 	@make -C libft
 
 $(MINI):
-	@make -C MLX42/build 
+	@cmake MLX42 -B MLX42/build && make -C MLX42/build -j4
 
 %.o: %.c inc/so_long.h 
 	$(CC) $(CFLAGS) -c $< -o $@
