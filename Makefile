@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/21 11:46:16 by vberdugo         ###   ########.fr        #
+#    Updated: 2024/09/22 14:07:57 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc
+CFLAGS = -Wall -Wextra -Werror -Ilm -Ilibft -Iinc
 
 LDFLAGS = $(LIBFT) $(MINI) -lglfw
 

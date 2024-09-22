@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/21 18:31:05 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:52:18 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,6 @@ void ft_randomize(void* param)
 {
 	(void)param;
 
-	char	*relative_path = "./textures/player.png";
-
-	mlx_texture_t *texture = mlx_load_png(relative_path);
-
-	image = mlx_texture_to_image(param, texture);
-
-	mlx_image_to_window(param, image, 0,0 );
-
-	
    for (uint32_t i = 0; i < image->width; ++i)
    {
 	   for (uint32_t y = 0; y < image->height; ++y)
@@ -52,55 +43,6 @@ void ft_randomize(void* param)
 	   }
 	}
 	 
-}
-
-void ft_hook(void* param)
-{
-	mlx_t* mlx = param;
-
-	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_UP))
-		image->instances[0].y -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-		image->instances[0].y += 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-		image->instances[0].x -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-		image->instances[0].x += 5;
-}
-
-
-int32_t main(void)
-{
-	mlx_t* mlx;
-
-	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
-	{
-		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
-	}
-	if (!(image = mlx_new_image(mlx, 128, 128)))
-	{
-		mlx_close_window(mlx);
-		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
-	}
-	if (mlx_image_to_window(mlx, image, 0, 0) == -1)
-	{
-		mlx_close_window(mlx);
-		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
-	}
-
-	ft_randomize(mlx);
-
-	mlx_loop_hook(mlx, ft_hook, mlx);
-	mlx_loop(mlx);
-
-	mlx_terminate(mlx);
-	
-	return (EXIT_SUCCESS);
 }
 */
 
@@ -119,88 +61,122 @@ uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y)
 	return (ft_pixel(pixel[0], pixel[1], pixel[2], pixel[3]));
 }
 
-void	ft_resize(mlx_texture_t *original_texture, mlx_image_t **image, float scale, mlx_t *mlx)
+void	ft_print(mlx_texture_t *tex, mlx_image_t **ima, float scale, mlx_t *mlx)
 {
-	int32_t		new_width;
-	int32_t		new_height;
-	int32_t		x;
-	int32_t		y;
-	uint32_t	src_x;
-	uint32_t	src_y;
+	int32_t		new_w;
+	int32_t		new_h;
+	int32_t		i;
+	uint32_t	s_x;
+	uint32_t	s_y;
 
-	if (*image != NULL)
-		mlx_delete_image(mlx, *image);
-	if (original_texture)
+	if (!tex || !ima || scale <= 0)
+		return ;
+	new_w = (int32_t)(tex->width * scale);
+	new_h = (int32_t)(tex->height * scale);
+	if (*ima != NULL)
+		mlx_delete_image(mlx, *ima);
+	*ima = mlx_new_image(mlx, new_w, new_h);
+	if (!*ima)
+		return ;
+	i = 0;
+	while (i < new_w * new_h)
 	{
-		new_width = (int32_t)(original_texture->width * scale);
-		new_height = (int32_t)(original_texture->height * scale);
-		*image = mlx_new_image(mlx, new_width, new_height);
-		if (!*image)
-		{
-			mlx_close_window(mlx);
-			return ;
-		}
-		x = 0;
-		while (x < new_width)
-		{
-			y = 0;
-			while (y < new_height)
-			{
-				src_x = (x * original_texture->width) / new_width;
-				src_y = (y * original_texture->height) / new_height;
-				mlx_put_pixel(*image, x, y, pixel_texture(original_texture, src_x, src_y));
-				++y;
-			}
-			++x;
-		}
+		s_x = (i % new_w * tex->width) / new_w;
+		s_y = (i / new_w * tex->height) / new_h;
+		mlx_put_pixel(*ima, i % new_w, i / new_w, pixel_texture(tex, s_x, s_y));
+		i++;
 	}
+}
+
+void	resize_hook(int32_t width, int32_t height, void *param)
+{
+	t_gamedata	*gd;
+	float		x;
+	float		y;
+	int			new_x;
+	int			new_y;
+
+	gd = (t_gamedata *)param;
+	if (!gd || !gd->player)
+		return ;
+	x = (float)width / (float)gd->player->texture_p->width;
+	y = (float)height / (float)gd->player->texture_p->height;
+	ft_print(gd->player->texture_p, &gd->player->image_p, fminf(x, y), gd->mlx);
+	new_x = (width - gd->player->image_p->width) / 2;
+	new_y = (height - gd->player->image_p->height) / 2;
+	mlx_image_to_window(gd->mlx, gd->player->image_p, new_x, new_y);
 }
 
 void	ft_hook(void *param)
 {
-	mlx_t					*mlx;
-	static float			scale;
-	static mlx_image_t		*image;
-	static mlx_texture_t	*original_texture;
+	t_gamedata	*gamedata;
+	mlx_t		*mlx;
+	t_player	*player;
+	mlx_image_t	*image;
 
-	mlx = param;
-	scale = 1.0f;
-	image = NULL;
-	original_texture = NULL;
-	if (!original_texture)
-	{
-		original_texture = mlx_load_png("./textures/player.png");
-		if (!original_texture)
-		{
-			mlx_close_window(mlx);
-			return ;
-		}
-		ft_resize(original_texture, &image, scale, mlx);
-		mlx_image_to_window(mlx, image, 0, 0);
-	}
+	gamedata = (t_gamedata *)param;
+	mlx = gamedata->mlx;
+	player = gamedata->player;
+	image = player->image_p;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(mlx);
-	if (image && image->instances)
+	if (mlx_is_key_down(mlx, MLX_KEY_UP))
+		player->y -= 5;
+	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+		player->y += 5;
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+		player->x -= 5;
+	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+		player->x += 5;
+	image->instances[0].x = player->x;
+	image->instances[0].y = player->y;
+}
+
+void	player_init(t_player *player, mlx_t *mlx)
+{
+	float			scale;
+	mlx_image_t		*image;
+	mlx_texture_t	*texture;
+
+	scale = 1.5f;
+	image = NULL;
+	texture = mlx_load_png("./textures/player.png");
+	if (!texture)
 	{
-		if (mlx_is_key_down(mlx, MLX_KEY_UP))
-			image->instances[0].y -= 5;
-		if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-			image->instances[0].y += 5;
-		if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-			image->instances[0].x -= 5;
-		if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-			image->instances[0].x += 5;
+		mlx_close_window(mlx);
+		return ;
 	}
+	ft_print(texture, &image, scale, mlx);
+	if (!image)
+	{
+		mlx_close_window(mlx);
+		return ;
+	}
+	player->texture_p = texture;
+	player->image_p = image;
+	player->scale = scale;
+	player->x = 0;
+	player->y = 0;
+	player->win = false;
+	mlx_image_to_window(mlx, image, player->x, player->y);
 }
 
 int	main(void)
 {
-	mlx_t	*mlx;
+	mlx_t		*mlx;
+	t_player	player;
+	t_gamedata	gamedata;
 
 	mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	if (!mlx)
 		return (EXIT_FAILURE);
-	mlx_loop_hook(mlx, ft_hook, mlx);
+	player_init(&player, mlx);
+	gamedata.mlx = mlx;
+	gamedata.player = &player;
+	gamedata.window_width = WIDTH;
+	gamedata.window_height = HEIGHT;
+	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_hook, &gamedata);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
