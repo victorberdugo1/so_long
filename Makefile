@@ -1,4 +1,4 @@
-#**************************************************************************** #
+#*************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/22 14:07:57 by vberdugo         ###   ########.fr        #
+#    Updated: 2024/09/24 10:49:14 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,15 +19,15 @@ MINI_BACKUP = $(MINI).backup
 
 INCLUDE = libft/libft.h lib/so_long.h
 
-SRC = so_long.c
+SRC = so_long.c input.c
 
 OBJ = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -Ilm -Ilibft -Iinc
+CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc
 
-LDFLAGS = $(LIBFT) $(MINI) -lglfw
+LDFLAGS = $(LIBFT) $(MINI) -lglfw -lm
 
 all: $(NAME)
 

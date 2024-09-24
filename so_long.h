@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/22 14:07:11 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/24 10:29:15 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,7 @@ typedef struct s_gamedata
 	int32_t		window_width;
 	int32_t		window_height;
 }	t_gamedata;
+
+void	ft_hook(void *param);
 
 #endif

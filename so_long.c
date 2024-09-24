@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/22 16:52:18 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/24 15:43:51 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,38 +17,34 @@
 #include <string.h>
 #include "so_long.h"
 
-/*
-static mlx_image_t* image;
-
-int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
-{
-	return (r << 24 | g << 16 | b << 8 | a);
-}
-
-void ft_randomize(void* param)
-{
-	(void)param;
-
-   for (uint32_t i = 0; i < image->width; ++i)
-   {
-	   for (uint32_t y = 0; y < image->height; ++y)
-	   {
-	   	uint32_t color = ft_pixel(
-	   rand() % 0xFF, // R
-	   rand() % 0xFF, // G
-	   rand() % 0xFF, // B
-	   rand() % 0xFF  // A
-	   	);
-		mlx_put_pixel(image, i, y, color);
-	   }
-	}
-	 
-}
-*/
-
 uint32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
+}
+
+void	ft_randomize(void *param)
+{
+	t_gamedata		*gd;
+	uint32_t		i;
+	static float	angle;
+	uint8_t			yellow;
+	uint8_t			color;
+
+	angle += 0.1f;
+	i = 0;
+	gd = (t_gamedata *)param;
+	while (i < gd->player->image_p->width * gd->player->image_p->height)
+	{
+		yellow = gd->player->image_p->pixels[i * 4 + 2];
+		if (yellow >= 30 && yellow <= 90)
+		{
+			color = (uint8_t)(180 + (75 * (sin(angle) + 1) / 2));
+			gd->player->image_p->pixels[i * 4] = color;
+			gd->player->image_p->pixels[i * 4 + 1] = color * 0.75;
+			gd->player->image_p->pixels[i * 4 + 2] = 70;
+		}
+		i++;
+	}
 }
 
 uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y)
@@ -107,31 +103,6 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 	mlx_image_to_window(gd->mlx, gd->player->image_p, new_x, new_y);
 }
 
-void	ft_hook(void *param)
-{
-	t_gamedata	*gamedata;
-	mlx_t		*mlx;
-	t_player	*player;
-	mlx_image_t	*image;
-
-	gamedata = (t_gamedata *)param;
-	mlx = gamedata->mlx;
-	player = gamedata->player;
-	image = player->image_p;
-	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_UP))
-		player->y -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-		player->y += 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-		player->x -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-		player->x += 5;
-	image->instances[0].x = player->x;
-	image->instances[0].y = player->y;
-}
-
 void	player_init(t_player *player, mlx_t *mlx)
 {
 	float			scale;
@@ -140,7 +111,7 @@ void	player_init(t_player *player, mlx_t *mlx)
 
 	scale = 1.5f;
 	image = NULL;
-	texture = mlx_load_png("./textures/player.png");
+	texture = mlx_load_png("./textures/coin.png");
 	if (!texture)
 	{
 		mlx_close_window(mlx);
@@ -173,10 +144,9 @@ int	main(void)
 	player_init(&player, mlx);
 	gamedata.mlx = mlx;
 	gamedata.player = &player;
-	gamedata.window_width = WIDTH;
-	gamedata.window_height = HEIGHT;
 	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
 	mlx_loop_hook(gamedata.mlx, ft_hook, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_randomize, &gamedata);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);

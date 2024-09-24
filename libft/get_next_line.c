@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 10:08:46 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/08/03 13:01:26 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/24 10:33:14 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char	*get_line(char *buffer)
 	return (line);
 }
 
-static char	*remainder(char *buffer)
+static char	*rem(char *buffer)
 {
 	int		i;
 	int		j;
@@ -109,6 +109,6 @@ char	*get_next_line(int fd)
 	line = get_line(buffer);
 	if (!line)
 		return (NULL);
-	buffer = remainder(buffer);
+	buffer = rem(buffer);
 	return (line);
 }
