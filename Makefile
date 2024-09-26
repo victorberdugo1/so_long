@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/24 10:49:14 by victor           ###   ########.fr        #
+#    Updated: 2024/09/26 10:26:41 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ MINI_BACKUP = $(MINI).backup
 
 INCLUDE = libft/libft.h lib/so_long.h
 
-SRC = so_long.c input.c
+SRC = so_long.c input.c collect.c map.c player.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -40,7 +40,7 @@ $(LIBFT):
 $(MINI):
 	@cmake MLX42 -B MLX42/build && make -C MLX42/build -j4
 
-%.o: %.c inc/so_long.h 
+%.o: %.c so_long.h 
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

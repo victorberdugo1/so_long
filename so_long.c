@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/24 15:43:51 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/26 11:43:46 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,137 +17,102 @@
 #include <string.h>
 #include "so_long.h"
 
-uint32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
+void	print_map(t_map *map)
 {
-	return (r << 24 | g << 16 | b << 8 | a);
+	int	i;
+
+	i = 0;
+	while (i < map->height)
+	{
+		ft_printf("%s", map->grid[i]);
+		i++;
+	}
 }
 
-void	ft_randomize(void *param)
+int	count_collectables(t_map *map)
 {
-	t_gamedata		*gd;
-	uint32_t		i;
-	static float	angle;
-	uint8_t			yellow;
-	uint8_t			color;
+	int	x;
+	int	y;
+	int	count;
 
-	angle += 0.1f;
-	i = 0;
-	gd = (t_gamedata *)param;
-	while (i < gd->player->image_p->width * gd->player->image_p->height)
+	count = 0;
+	y = 0;
+	while (y < map->height)
 	{
-		yellow = gd->player->image_p->pixels[i * 4 + 2];
-		if (yellow >= 30 && yellow <= 90)
+		x = 0;
+		while (x < map->width)
 		{
-			color = (uint8_t)(180 + (75 * (sin(angle) + 1) / 2));
-			gd->player->image_p->pixels[i * 4] = color;
-			gd->player->image_p->pixels[i * 4 + 1] = color * 0.75;
-			gd->player->image_p->pixels[i * 4 + 2] = 70;
+			if (map->grid[y][x] == 'C')
+				count++;
+			x++;
 		}
-		i++;
+		y++;
 	}
+	return (count);
 }
 
-uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y)
+void	init_collectables(t_gamedata *gd)
 {
-	uint32_t	index;
-	uint8_t		*pixel;
+	int	x;
+	int	y;
+	int	idx;
 
-	index = (y * texture->width + x) * 4;
-	pixel = &texture->pixels[index];
-	return (ft_pixel(pixel[0], pixel[1], pixel[2], pixel[3]));
-}
-
-void	ft_print(mlx_texture_t *tex, mlx_image_t **ima, float scale, mlx_t *mlx)
-{
-	int32_t		new_w;
-	int32_t		new_h;
-	int32_t		i;
-	uint32_t	s_x;
-	uint32_t	s_y;
-
-	if (!tex || !ima || scale <= 0)
-		return ;
-	new_w = (int32_t)(tex->width * scale);
-	new_h = (int32_t)(tex->height * scale);
-	if (*ima != NULL)
-		mlx_delete_image(mlx, *ima);
-	*ima = mlx_new_image(mlx, new_w, new_h);
-	if (!*ima)
-		return ;
-	i = 0;
-	while (i < new_w * new_h)
+	idx = 0;
+	y = 0;
+	while (y < gd->map->height)
 	{
-		s_x = (i % new_w * tex->width) / new_w;
-		s_y = (i / new_w * tex->height) / new_h;
-		mlx_put_pixel(*ima, i % new_w, i / new_w, pixel_texture(tex, s_x, s_y));
-		i++;
+		x = 0;
+		while (x < gd->map->width)
+		{
+			if (gd->map->grid[y][x] == 'C')
+			{
+				collect_init(&gd->map->collects[idx], x, y, gd->mlx);
+				idx++;
+			}
+			x++;
+		}
+		y++;
 	}
 }
 
-void	resize_hook(int32_t width, int32_t height, void *param)
+int	init_collectables_from_map(t_gamedata *gamedata)
 {
-	t_gamedata	*gd;
-	float		x;
-	float		y;
-	int			new_x;
-	int			new_y;
-
-	gd = (t_gamedata *)param;
-	if (!gd || !gd->player)
-		return ;
-	x = (float)width / (float)gd->player->texture_p->width;
-	y = (float)height / (float)gd->player->texture_p->height;
-	ft_print(gd->player->texture_p, &gd->player->image_p, fminf(x, y), gd->mlx);
-	new_x = (width - gd->player->image_p->width) / 2;
-	new_y = (height - gd->player->image_p->height) / 2;
-	mlx_image_to_window(gd->mlx, gd->player->image_p, new_x, new_y);
+	gamedata->coins = count_collectables(gamedata->map);
+	gamedata->map->collects = malloc(sizeof(t_collect) * gamedata->coins);
+	if (!gamedata->map->collects)
+	{
+		ft_printf("Error\nFailed to allocate memory for collectables\n");
+		return (0);
+	}
+	init_collectables(gamedata);
+	return (1);
 }
 
-void	player_init(t_player *player, mlx_t *mlx)
-{
-	float			scale;
-	mlx_image_t		*image;
-	mlx_texture_t	*texture;
-
-	scale = 1.5f;
-	image = NULL;
-	texture = mlx_load_png("./textures/coin.png");
-	if (!texture)
-	{
-		mlx_close_window(mlx);
-		return ;
-	}
-	ft_print(texture, &image, scale, mlx);
-	if (!image)
-	{
-		mlx_close_window(mlx);
-		return ;
-	}
-	player->texture_p = texture;
-	player->image_p = image;
-	player->scale = scale;
-	player->x = 0;
-	player->y = 0;
-	player->win = false;
-	mlx_image_to_window(mlx, image, player->x, player->y);
-}
-
-int	main(void)
+int	main(int argc, char **argv)
 {
 	mlx_t		*mlx;
 	t_player	player;
 	t_gamedata	gamedata;
 
+	if (argc != 2)
+		return (ft_printf("Error\nmap_file.ber missing\n"), EXIT_FAILURE);
+	gamedata.map = read_map(argv[1]);
+	print_map(gamedata.map);
+	if (!gamedata.map)
+		return (ft_printf("Error\nInvalid map\n"), EXIT_FAILURE);
 	mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	if (!mlx)
 		return (EXIT_FAILURE);
 	player_init(&player, mlx);
 	gamedata.mlx = mlx;
 	gamedata.player = &player;
+	if (!init_collectables_from_map(&gamedata))
+		return (EXIT_FAILURE);
 	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
-	mlx_loop_hook(gamedata.mlx, ft_hook, &gamedata);
 	mlx_loop_hook(gamedata.mlx, ft_randomize, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_hook, &gamedata);
 	mlx_loop(mlx);
+	free_resources(&gamedata);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }
