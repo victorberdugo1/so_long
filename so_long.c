@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/26 11:43:46 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/26 16:29:38 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,6 @@
 #include <unistd.h>
 #include <string.h>
 #include "so_long.h"
-
-void	print_map(t_map *map)
-{
-	int	i;
-
-	i = 0;
-	while (i < map->height)
-	{
-		ft_printf("%s", map->grid[i]);
-		i++;
-	}
-}
 
 int	count_collectables(t_map *map)
 {
@@ -97,12 +85,12 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		return (ft_printf("Error\nmap_file.ber missing\n"), EXIT_FAILURE);
 	gamedata.map = read_map(argv[1]);
-	print_map(gamedata.map);
 	if (!gamedata.map)
 		return (ft_printf("Error\nInvalid map\n"), EXIT_FAILURE);
 	mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	if (!mlx)
 		return (EXIT_FAILURE);
+	draw_map(gamedata.map, 120, 120, mlx);
 	player_init(&player, mlx);
 	gamedata.mlx = mlx;
 	gamedata.player = &player;

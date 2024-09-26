@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/26 11:21:53 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/26 16:21:14 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,17 @@ typedef struct s_collect
 
 typedef struct s_map
 {
-	char		**grid;
-	int			width;
-	int			height;
-	int			exit_count;
-	int			player_count;
-	t_collect	*collects;
-	bool		valid;
-	bool		closed;
+	mlx_image_t		*image_m;
+	mlx_texture_t	*texture_m;
+	char			**grid;
+	float			scale;		
+	int				width;
+	int				height;
+	int				exit_count;
+	int				player_count;
+	t_collect		*collects;
+	bool			valid;
+	bool			closed;
 }	t_map;
 
 typedef struct s_gamedata
@@ -94,5 +97,6 @@ int			map_size(const char *filename, int *width, int *height);
 t_map		*fill_map(const char *filename, int width, t_map *map);
 void		collect_init(t_collect *coll, int x, int y, mlx_t *mlx);
 void		ft_randomize(void *param);
+void		draw_map(t_map *map, int x, int y, mlx_t *mlx);
 
-#endif
+#endif 
