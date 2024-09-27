@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/26 16:21:14 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/27 23:47:23 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@
 # define INT_MIN -2147483648
 # define WIDTH 512
 # define HEIGHT 512
+# define TILE_SIZE 64
+
+typedef struct s_coord
+{
+	int	x;
+	int	y;
+}	t_coord;
 
 typedef struct s_player
 {
@@ -61,7 +68,7 @@ typedef struct s_collect
 
 typedef struct s_map
 {
-	mlx_image_t		*image_m;
+	mlx_image_t		**images_m;
 	mlx_texture_t	*texture_m;
 	char			**grid;
 	float			scale;		
@@ -97,6 +104,14 @@ int			map_size(const char *filename, int *width, int *height);
 t_map		*fill_map(const char *filename, int width, t_map *map);
 void		collect_init(t_collect *coll, int x, int y, mlx_t *mlx);
 void		ft_randomize(void *param);
-void		draw_map(t_map *map, int x, int y, mlx_t *mlx);
+void		draw_map(t_map *map, mlx_t *mlx);
+int			all_collected(t_map *map);
+uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width);
+t_coord		get_border_sprite(t_map *map, int coord_y, int coord_x);
+uint32_t	convert_pixel(uint32_t px);
+void		pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy);
+t_coord		get_inner_sprite(t_map *mp, int y, int x);
+void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
+uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y);
 
 #endif 

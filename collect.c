@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:31:26 by victor            #+#    #+#             */
-/*   Updated: 2024/09/26 11:42:34 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/27 21:08:41 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ void	collect_color(t_collect *collect, float angle)
 	while (i < collect->image_c->width * collect->image_c->height)
 	{
 		yellow = collect->image_c->pixels[i * 4 + 2];
-		if (yellow >= 32 && yellow <= 90)
+		if (yellow >= 17 && yellow <= 190)
 		{
 			color = (uint8_t)(180 + (75 * (sin(angle) + 1) / 2));
 			collect->image_c->pixels[i * 4] = color;
 			collect->image_c->pixels[i * 4 + 1] = color * 0.75;
-			collect->image_c->pixels[i * 4 + 2] = 70;
+			collect->image_c->pixels[i * 4 + 2] = 50;
 		}
 		i++;
 	}
