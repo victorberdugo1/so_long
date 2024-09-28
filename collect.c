@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:31:26 by victor            #+#    #+#             */
-/*   Updated: 2024/09/27 21:08:41 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/28 11:18:52 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	collect_init(t_collect *coll, int x, int y, mlx_t *mlx)
 		mlx_close_window(mlx);
 		return ;
 	}
-	ft_prt(coll->texture_c, &coll->image_c, coll->scale, mlx);
+	prptxt(coll->texture_c, &coll->image_c, coll->scale, mlx);
 	if (!coll->image_c)
 	{
 		mlx_delete_texture(coll->texture_c);

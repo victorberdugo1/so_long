@@ -6,13 +6,13 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:43:15 by victor            #+#    #+#             */
-/*   Updated: 2024/09/27 22:02:44 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/28 12:47:19 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	ft_prt(mlx_texture_t *tex, mlx_image_t **im, float scl, mlx_t *mlx)
+void	prptxt(mlx_texture_t *tex, mlx_image_t **im, float scl, mlx_t *mlx)
 {
 	int32_t		new_w;
 	int32_t		new_h;
@@ -53,17 +53,17 @@ void	player_init(t_player *player, mlx_t *mlx)
 		mlx_close_window(mlx);
 		return ;
 	}
-	ft_prt(texture, &image, scale, mlx);
+	prptxt(texture, &image, scale, mlx);
 	if (!image)
 	{
 		mlx_close_window(mlx);
 		return ;
 	}
 	player->texture_p = texture;
-	player->image_p = image;
+	//player->image_p = image;
 	player->scale = scale;
 	player->x = 0;
 	player->y = 0;
 	player->win = false;
-	mlx_image_to_window(mlx, image, player->x, player->y);
+	//mlx_image_to_window(mlx, image, player->x, player->y);
 }
