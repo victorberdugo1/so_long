@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/30 13:16:33 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/30 21:09:50 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,10 @@ typedef struct s_enemy
 
 typedef struct s_collect
 {
-	mlx_image_t		*image_c;
+	mlx_image_t		**image_c;
+	mlx_image_t		*resize_c;
 	mlx_texture_t	*texture_c;
-	float			scale;
+	float			scale_c;
 	int				x;
 	int				y;
 	bool			pick;
@@ -122,5 +123,6 @@ t_coord		get_inner_sprite(t_map *mp, int y, int x);
 void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
 uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y);
 void	ft_draw(void *param);
+void	ft_draw_coll(void *param);
 
 #endif 

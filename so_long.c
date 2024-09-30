@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/30 17:21:41 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:12:31 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,13 @@ int	main(int argc, char **argv)
 	player_init(&player, mlx);
 	gamedata.mlx = mlx;
 	gamedata.player = &player;
-	//if (!init_collectables_from_map(&gamedata))
-	//	return (EXIT_FAILURE);
+	if (!init_collectables_from_map(&gamedata))
+		return (EXIT_FAILURE);
 	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
 	mlx_key_hook(gamedata.mlx, ft_hook, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_randomize, &gamedata);
 	mlx_loop_hook(gamedata.mlx, ft_draw, &gamedata);
-	//mlx_loop_hook(gamedata.mlx, ft_randomize, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_draw_coll, &gamedata);
 	mlx_loop(mlx);
 	return (free_resources(&gamedata), mlx_terminate(mlx), EXIT_SUCCESS);
 }
