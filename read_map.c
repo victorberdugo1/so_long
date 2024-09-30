@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/09/26 16:10:45 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/09/29 17:17:48 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ t_map	*init_map(int width, int height)
 	map = malloc(sizeof(t_map));
 	if (!map)
 		return (NULL);
-	map->width = width;
-	map->height = height;
+	map->wdt = width;
+	map->hgt = height;
 	map->exit_count = 0;
 	map->player_count = 0;
 	map->valid = true;

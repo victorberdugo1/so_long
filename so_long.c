@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/28 12:17:40 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/30 12:44:11 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ int	count_collectables(t_map *map)
 
 	count = 0;
 	y = 0;
-	while (y < map->height)
+	while (y < map->hgt)
 	{
 		x = 0;
-		while (x < map->width)
+		while (x < map->wdt)
 		{
 			if (map->grid[y][x] == 'C')
 				count++;
@@ -47,10 +47,10 @@ void	init_collectables(t_gamedata *gd)
 
 	idx = 0;
 	y = 0;
-	while (y < gd->map->height)
+	while (y < gd->map->hgt)
 	{
 		x = 0;
-		while (x < gd->map->width)
+		while (x < gd->map->wdt)
 		{
 			if (gd->map->grid[y][x] == 'C')
 			{
@@ -95,11 +95,12 @@ int	main(int argc, char **argv)
 	player_init(&player, mlx);
 	gamedata.mlx = mlx;
 	gamedata.player = &player;
-	if (!init_collectables_from_map(&gamedata))
-		return (EXIT_FAILURE);
+	//if (!init_collectables_from_map(&gamedata))
+	//	return (EXIT_FAILURE);
 	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
+	mlx_key_hook(gamedata.mlx, ft_hook, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_draw, &gamedata);
 	mlx_loop_hook(gamedata.mlx, ft_randomize, &gamedata);
-	mlx_loop_hook(gamedata.mlx, ft_hook, &gamedata);
 	mlx_loop(mlx);
 	return (free_resources(&gamedata), mlx_terminate(mlx), EXIT_SUCCESS);
 }

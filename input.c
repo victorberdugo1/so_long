@@ -6,31 +6,71 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/09/28 12:46:44 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/30 13:30:19 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	scl_img(mlx_image_t **im, mlx_image_t **siz, float scl, t_gamedata *gd)
+{
+	int32_t new_w;
+	int32_t new_h;
+	int32_t x;
+	int32_t y;
+
+	if (!im || !*im || scl <= 0)
+		return ;
+	new_w = (int32_t)((*im)->width * scl);
+	new_h = (int32_t)((*im)->height * scl);
+	if (siz != NULL)
+		mlx_delete_image(gd->mlx, *siz);
+	*siz = mlx_new_image(gd->mlx, new_w, new_h);
+	if (!*siz)
+		return ;
+	for (y = 0; y < new_h; y++)
+	{
+		for (x = 0; x < new_w; x++)
+		{
+			uint32_t src_x = (x * (*im)->width) / new_w;
+			uint32_t src_y = (y * (*im)->height) / new_h;
+			uint32_t pixel = get_pixel((*im)->pixels, src_x, src_y, (*im)->width);
+			pixel = convert_pixel(pixel);
+			mlx_put_pixel(*siz, x, y, pixel);
+		}
+	}
+}
 
 void	resize_hook(int32_t width, int32_t height, void *param)
 {
 	t_gamedata	*gd;
 	float		x;
 	float		y;
-	//int			new_x;
-	//int			new_y;
+	static mlx_image_t *bg_image = NULL; 
+	uint32_t color;
 
+	color = ft_pixel(0, 122, 51, 255);
 	gd = (t_gamedata *)param;
 	if (!gd || !gd->player)
 		return ;
-	x = (float)width / (float)gd->player->texture_p->width;
-	y = (float)height / (float)gd->player->texture_p->height;
-	x = y;
-	y = x;
-	//prptxt(gd->player->texture_p, &gd->player->image_p, fminf(x, y), gd->mlx);
-	//new_x = (width - gd->player->image_p->width) / 2;
-	//new_y = (height - gd->player->image_p->height) / 2;
-	//mlx_image_to_window(gd->mlx, gd->player->image_p, new_x, new_y);
+
+	if (bg_image != NULL)
+		mlx_delete_image(gd->mlx, bg_image);
+	bg_image = mlx_new_image(gd->mlx, width, height);
+	for (int32_t y = 0; y < height; y++)
+	{
+		for (int32_t x = 0; x < width; x++)
+		{
+			mlx_put_pixel(bg_image, x, y, color);
+		}
+	}
+	mlx_image_to_window(gd->mlx, bg_image, 0, 0);
+	x = (float)width / (float)gd->map->full_m->width;
+	y = (float)height / (float)gd->map->full_m->height;
+	gd->map->scale = fmaxf(x, y);
+	gd->player->scale = fmaxf(x, y);
+	scl_img(&gd->map->full_m, &gd->map->resize_m, fmaxf(x, y), gd);
+	scl_img(&gd->player->image_p[gd->player->current_frame], &gd->player->resize_p, fmaxf(x, y), gd);
 }
 
 void	free_collects_and_grid(t_gamedata *gamedata)
@@ -50,7 +90,7 @@ void	free_collects_and_grid(t_gamedata *gamedata)
 	}
 	free(gamedata->map->collects);
 	i = 0;
-	while (i < gamedata->map->height)
+	while (i < gamedata->map->hgt)
 	{
 		free(gamedata->map->grid[i]);
 		i++;
@@ -66,42 +106,99 @@ void	free_resources(t_gamedata *gamedata)
 	if (gamedata->player->texture_p)
 		mlx_delete_texture(gamedata->player->texture_p);
 	//if (gamedata->player->image_p)
-		//mlx_delete_image(gamedata->mlx, gamedata->player->image_p);
+	//mlx_delete_image(gamedata->mlx, gamedata->player->image_p);
 	if (gamedata->map)
 	{
 		i = 0;
-		while (i < gamedata->map->width * gamedata->map->height)
+		while (i < gamedata->map->wdt * gamedata->map->hgt)
 		{
-			if (gamedata->map->images_m[i])
-				mlx_delete_image(gamedata->mlx, gamedata->map->images_m[i]);
+			if (gamedata->map->tiles[i])
+				mlx_delete_image(gamedata->mlx, gamedata->map->tiles[i]);
 			i++;
 		}
-		free(gamedata->map->images_m);
-		free_collects_and_grid(gamedata);
+		free(gamedata->map->tiles);
+		//free(gamedata->map->full_m);
+		//free_collects_and_grid(gamedata);
 	}
 }
 
-void	ft_hook(void *param)
+void update_frame(t_player *player)
 {
-	t_gamedata	*gamedata;
-	mlx_t		*mlx;
-	t_player	*player;
-	//mlx_image_t	*image;
+	static float last_frame_time = 0;
+	float current_time = mlx_get_time();
+	float delta_time = current_time - last_frame_time;
+	last_frame_time = current_time;
 
-	gamedata = (t_gamedata *)param;
-	mlx = gamedata->mlx;
-	player = gamedata->player;
-	//image = player->image_p;
-	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_UP) || mlx_is_key_down(mlx, MLX_KEY_W))
-		player->y -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_DOWN) || mlx_is_key_down(mlx, MLX_KEY_S))
-		player->y += 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT) || mlx_is_key_down(mlx, MLX_KEY_A))
-		player->x -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT) || mlx_is_key_down(mlx, MLX_KEY_D))
-		player->x += 5;
-	//image->instances[0].x = player->x;
-	//image->instances[0].y = player->y;
+	player->frame_timer += delta_time;
+	if (player->frame_timer >= player->animation_speed)
+	{
+		player->frame_timer -= player->animation_speed;
+		if (player->current_frame >= 0 && player->current_frame <= 3) // Abajo
+			player->current_frame = (player->current_frame + 1) % 4; // Frames 0, 1, 2
+		else if (player->current_frame >= 8 && player->current_frame <= 11) // Arriba
+			player->current_frame = (player->current_frame + 1) % 4 + 8; // Frames 8, 9, 10
+		else if (player->current_frame >= 4 && player->current_frame <= 7) // Izquierda
+			player->current_frame = (player->current_frame + 1) % 4 + 4; // Frames 4, 5, 6
+		else if (player->current_frame >= 12 && player->current_frame <= 15) // Derecha
+			player->current_frame = (player->current_frame + 1) % 4 + 12; // Frames 12, 13, 14
+	}
 }
+
+void ft_hook(mlx_key_data_t keydata, void *param)
+{
+    t_gamedata *gd = (t_gamedata *)param;
+    t_player *player = gd->player;
+    float move_speed;
+
+    move_speed = 50.0f / gd->map->scale;
+    if (mlx_is_key_down(gd->mlx, MLX_KEY_ESCAPE))
+        mlx_close_window(gd->mlx);
+
+    int frame_offset = -1;
+
+
+    if (keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W)
+    {
+        player->xy_p.y -= move_speed;
+        frame_offset = 8;
+    }
+    else if (keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S)
+    {
+        player->xy_p.y += move_speed;
+        frame_offset = 0;
+    }
+    else if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)
+    {
+        player->xy_p.x -= move_speed;
+        frame_offset = 4;
+    }
+    else if (keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D)
+    {
+        player->xy_p.x += move_speed;
+        frame_offset = 12;
+    }
+
+    if (frame_offset >= 0)
+    {
+        player->current_frame = (player->current_frame + 1) % 4 + frame_offset;
+    }
+}
+
+void ft_draw(void *param)
+{
+	t_gamedata *gd = (t_gamedata *)param;
+	t_player *player = gd->player;
+
+	if (player->resize_p != NULL) {
+        mlx_delete_image(gd->mlx, player->resize_p);
+    }
+	update_frame(player);
+
+    player->resize_p = mlx_new_image(gd->mlx, player->image_p[player->current_frame]->width, player->image_p[player->current_frame]->height);
+    scl_img(&player->image_p[player->current_frame], &player->resize_p, player->scale, gd);
+    mlx_image_to_window(gd->mlx, player->resize_p, player->xy_p.x, player->xy_p.y);
+    
+    if (gd->map->resize_m != NULL)
+        mlx_image_to_window(gd->mlx, gd->map->resize_m, 0, 0);
+}
+

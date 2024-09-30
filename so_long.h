@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/28 12:41:09 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/30 13:16:33 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ typedef struct s_coord
 typedef struct s_player
 {
 	mlx_image_t		**image_p;
+	mlx_image_t		*resize_p;
 	mlx_texture_t	*texture_p;
 	float			scale;
-	int				x;
-	int				y;
+	t_coord			xy_p;
 	bool			win;
 	int				current_frame;
 	int				total_frames;
@@ -72,12 +72,16 @@ typedef struct s_collect
 
 typedef struct s_map
 {
-	mlx_image_t		**images_m;
+	mlx_image_t		*full_m;
+	mlx_image_t		*resize_m;
+	mlx_image_t		**tiles;
 	mlx_texture_t	*texture_m;
 	char			**grid;
-	float			scale;		
-	int				width;
-	int				height;
+	float			scale;
+	int				wdt;
+	int				hgt;
+	int				orient;
+	t_coord			xy_m;
 	int				exit_count;
 	int				player_count;
 	t_collect		*collects;
@@ -97,10 +101,10 @@ typedef struct s_gamedata
 }	t_gamedata;
 
 void		player_init(t_player *player, mlx_t *mlx);
-void		ft_hook(void *param);
+void		ft_hook(mlx_key_data_t keydata, void* param);
 void		free_resources(t_gamedata *gamedata);
 void		resize_hook(int32_t width, int32_t height, void *param);
-void		prptxt(mlx_texture_t *tex, mlx_image_t **im, float scl, mlx_t *mlx);
+//void		scl_img(mlx_image_t **im, mlx_image_t **siz, float scl, mlx_t *mlx);
 uint32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 t_map		*init_map(int width, int height);
 t_map		*read_map(const char *filename);
@@ -117,5 +121,6 @@ void		pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy);
 t_coord		get_inner_sprite(t_map *mp, int y, int x);
 void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
 uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y);
+void	ft_draw(void *param);
 
 #endif 

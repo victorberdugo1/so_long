@@ -6,11 +6,58 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 21:56:07 by victor            #+#    #+#             */
-/*   Updated: 2024/09/27 21:57:42 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/29 17:20:18 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy)
+{
+	int			x;
+	int			y;
+	uint32_t	src_x;
+	uint32_t	src_y;
+	uint32_t	pxl;
+
+	y = 0;
+	while (y < TILE_SIZE)
+	{
+		x = 0;
+		while (x < TILE_SIZE)
+		{
+			src_x = spx * TILE_SIZE + x;
+			src_y = spy * TILE_SIZE + y;
+			if (src_x < txt->width && src_y < txt->height)
+			{
+				pxl = get_pixel(txt->pixels, src_x, src_y, txt->width);
+				pxl = convert_pixel(pxl);
+				mlx_put_pixel(sbim, x, y, pxl);
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+void	process_tile(t_map *map, mlx_t *mlx, int i, int j)
+{
+	mlx_image_t	*subimage;
+	t_coord		coords;
+
+	if (i == 0 || i == map->hgt - 1 || j == 0 || j == map->wdt - 1)
+		coords = get_border_sprite(map, i, j);
+	else
+		coords = get_inner_sprite(map, i, j);
+	subimage = mlx_new_image(mlx, TILE_SIZE, TILE_SIZE);
+	if (!subimage)
+	{
+		mlx_delete_texture(map->texture_m);
+		return (mlx_close_window(mlx), free(map->tiles));
+	}
+	pxls_subim(subimage, map->texture_m, coords.x, coords.y);
+	map->tiles[i * map->wdt + j] = subimage;
+}
 
 int	all_collected(t_map *map)
 {
@@ -32,16 +79,16 @@ t_coord	get_border_sprite(t_map *map, int coord_y, int coord_x)
 	{
 		if (coord_x == 0)
 			return ((t_coord){0, 0});
-		else if (coord_x == map->width - 1)
+		else if (coord_x == map->wdt - 1)
 			return ((t_coord){2, 0});
 		else
 			return ((t_coord){1, 0});
 	}
-	else if (coord_y == map->height - 1)
+	else if (coord_y == map->hgt - 1)
 	{
 		if (coord_x == 0)
 			return ((t_coord){3, 0});
-		else if (coord_x == map->width - 1)
+		else if (coord_x == map->wdt - 1)
 			return ((t_coord){1, 1});
 		else
 			return ((t_coord){0, 1});
