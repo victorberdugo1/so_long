@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:55:39 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/30 10:50:37 by victor           ###   ########.fr       */
+/*   Updated: 2024/09/30 16:24:34 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@ void	create_full_image(t_map *map, mlx_t *mlx)
 	if (!map->full_m)
 	{
 		mlx_delete_texture(map->texture_m);
-		free(map->tiles);  // Asegura liberar la memoria de tiles
+		free(map->tiles);
 		mlx_close_window(mlx);
-		return;
+		return ;
 	}
 	map->resize_m = mlx_new_image(mlx, map->wdt * 64, map->hgt * 64);
 	if (!map->resize_m)
 	{
 		mlx_delete_texture(map->texture_m);
 		mlx_delete_image(mlx, map->full_m);
-		free(map->tiles);  // Asegura liberar la memoria de tiles
+		free(map->tiles);
 		mlx_close_window(mlx);
-		return;
+		return ;
 	}
 }
 
@@ -90,16 +90,13 @@ void	draw_map(t_map *map, mlx_t *mlx)
 		return ;
 	map->tiles = malloc(map->wdt * map->hgt * sizeof(mlx_image_t *));
 	if (!map->tiles)
-	{
-		mlx_delete_image(mlx, map->full_m);  // Liberar la imagen si falla
-		return;
-	}
+		return (mlx_delete_image(mlx, map->full_m));
 	map->texture_m = mlx_load_png("textures/map.png");
 	if (!map->texture_m)
 	{
-		free(map->tiles);  // Liberar memoria antes de salir
-		mlx_delete_image(mlx, map->full_m);  // Liberar la imagen si falla
-		return;
+		free(map->tiles);
+		mlx_delete_image(mlx, map->full_m);
+		return ;
 	}
 	create_full_image(map, mlx);
 	i = -1;
