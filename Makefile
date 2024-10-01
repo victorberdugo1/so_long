@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/29 18:59:36 by victor           ###   ########.fr        #
+#    Updated: 2024/10/01 07:50:30 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,8 @@ MINI_BACKUP = $(MINI).backup
 
 INCLUDE = libft/libft.h lib/so_long.h
 
-SRC = so_long.c input.c collect.c read_map.c player.c draw_map.c pixel_utils.c \
-	  map_utils.c
+SRC = so_long.c input.c collect.c map_read.c player.c map_draw.c pixel_utils.c \
+	  map_utils.c free.c
 
 OBJ = $(SRC:.c=.o)
 

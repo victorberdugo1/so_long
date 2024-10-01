@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/09/30 21:15:22 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/01 07:50:58 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,55 +79,6 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 	scl_img(&gd->player->image_p[gd->player->current_frame], &gd->player->resize_p, fmaxf(x, y), gd);
 }
 
-void	free_collects_and_grid(t_gamedata *gamedata)
-{
-	int			i;
-	t_collect	*collect;
-
-	i = 0;
-	while (i < gamedata->coins)
-	{
-		collect = &gamedata->map->collects[i];
-		//if (collect->image_c)
-			//mlx_delete_image(gamedata->mlx, collect->image_c);
-		if (collect->texture_c)
-			mlx_delete_texture(collect->texture_c);
-		i++;
-	}
-	free(gamedata->map->collects);
-	i = 0;
-	while (i < gamedata->map->hgt)
-	{
-		free(gamedata->map->grid[i]);
-		i++;
-	}
-	free(gamedata->map->grid);
-	free(gamedata->map);
-}
-
-void	free_resources(t_gamedata *gamedata)
-{
-	int	i;
-
-	if (gamedata->player->texture_p)
-		mlx_delete_texture(gamedata->player->texture_p);
-	//if (gamedata->player->image_p)
-	//mlx_delete_image(gamedata->mlx, gamedata->player->image_p);
-	if (gamedata->map)
-	{
-		i = 0;
-		while (i < gamedata->map->wdt * gamedata->map->hgt)
-		{
-			if (gamedata->map->tiles[i])
-				mlx_delete_image(gamedata->mlx, gamedata->map->tiles[i]);
-			i++;
-		}
-		free(gamedata->map->tiles);
-		//free(gamedata->map->full_m);
-		//free_collects_and_grid(gamedata);
-	}
-}
-
 void	update_frame(t_player *player)
 {
 	static float	last_frame_time = 0;
@@ -191,40 +142,6 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 	}
 }
 
-void	scl_col(mlx_image_t **ima, mlx_image_t **size, float scl, t_gamedata *gd)
-{
-	int32_t		new_w;
-	int32_t		new_h;
-	int32_t		x;
-	int32_t		y;
-	uint32_t	src_x;
-	uint32_t	src_y;
-	uint32_t	pixel;
-
-	if (!ima || !*ima || scl <= 0)
-		return ;
-	new_w = (int32_t)((*ima)->width * scl);
-	new_h = (int32_t)((*ima)->height * scl);
-	if (size != NULL)
-		mlx_delete_image(gd->mlx, *size);
-	*size = mlx_new_image(gd->mlx, new_w, new_h);
-	if (!*size)
-		return ;
-	y = -1;
-	while (++y < new_h)
-	{
-		x = -1;
-		while (++x < new_w)
-		{
-			src_x = (x * (*ima)->width) / new_w;
-			src_y = (y * (*ima)->height) / new_h;
-			pixel = get_pixel((*ima)->pixels, src_x, src_y, (*ima)->width);
-			pixel = convert_pixel(pixel);
-			mlx_put_pixel(*size, x, y, pixel);
-		}
-	}
-}
-
 void	ft_draw(void *param)
 {
 	t_gamedata	*gd;
@@ -241,27 +158,27 @@ void	ft_draw(void *param)
 	scl_img(&player->image_p[player->current_frame], &player->resize_p, player->scale, gd);
 	mlx_image_to_window(gd->mlx, player->resize_p, player->xy_p.x, player->xy_p.y);
 
-	//if (gd->map->resize_m != NULL)
-	//	mlx_image_to_window(gd->mlx, gd->map->resize_m, 0, 0);
+	if (gd->map->resize_m != NULL)
+		mlx_image_to_window(gd->mlx, gd->map->resize_m, 0, 0);
+
 }
 
-void	ft_draw_coll(void *param)
+void ft_draw_coll(void *param)
 {
-	t_gamedata	*gad;
+    t_gamedata *gad;
+    t_collect *collect;
+    int tile_idx = 0;
 
-	t_collect *collect; 
-	int tile_idx = 0;
+    gad = (t_gamedata *)param;
+    collect = &gad->map->collects[0];
 
-	gad = (t_gamedata *)param;
-	collect = &gad->map->collects[0];
+    //if (collect->resize_c != NULL)
+    //    mlx_delete_image(gad->mlx, collect->resize_c);  // Liberar imagen anterior
 
-	// Redimensionar y dibujar la imagen del collect
-	//if (collect->resize_c != NULL)
-	//	mlx_delete_image(gad->mlx, collect->resize_c);
-	collect->resize_c = mlx_new_image(gad->mlx, collect->image_c[tile_idx]->width, collect->image_c[tile_idx]->height);
-	scl_col(&collect->image_c[tile_idx], &collect->resize_c, collect->scale_c, gad);
-	if (collect->resize_c != NULL)
-		mlx_image_to_window(gad->mlx, collect->resize_c, collect->x, collect->y);
-	//if (gd->map->resize_m != NULL)
-	//	mlx_image_to_window(gd->mlx, gd->map->resize_m, 0, 0);
+    collect->resize_c = mlx_new_image(gad->mlx, collect->image_c[tile_idx]->width, collect->image_c[tile_idx]->height);
+    scl_img(&collect->image_c[tile_idx], &collect->resize_c, collect->scale_c, gad);
+
+    if (collect->resize_c != NULL)
+        mlx_image_to_window(gad->mlx, collect->resize_c, collect->x, collect->y);
 }
+
