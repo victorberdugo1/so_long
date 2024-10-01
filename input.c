@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/01 07:50:58 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/01 22:40:14 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,40 +145,35 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 void	ft_draw(void *param)
 {
 	t_gamedata	*gd;
-	t_player	*player;
-
+	t_player	*pl;
 
 	gd = (t_gamedata *)param;
-
-	player = gd->player;
-	if (player->resize_p != NULL)
-		mlx_delete_image(gd->mlx, player->resize_p);
-	update_frame(player);
-	player->resize_p = mlx_new_image(gd->mlx, player->image_p[player->current_frame]->width, player->image_p[player->current_frame]->height);
-	scl_img(&player->image_p[player->current_frame], &player->resize_p, player->scale, gd);
-	mlx_image_to_window(gd->mlx, player->resize_p, player->xy_p.x, player->xy_p.y);
-
+	pl = gd->player;
+	if (pl->resize_p != NULL)
+		mlx_delete_image(gd->mlx, pl->resize_p);
+	update_frame(pl);
+	pl->resize_p = mlx_new_image(gd->mlx, pl->image_p[pl->current_frame]->width,
+			pl->image_p[pl->current_frame]->height);
+	scl_img(&pl->image_p[pl->current_frame], &pl->resize_p, pl->scale, gd);
+	mlx_image_to_window(gd->mlx, pl->resize_p, pl->xy_p.x, pl->xy_p.y);
 	if (gd->map->resize_m != NULL)
 		mlx_image_to_window(gd->mlx, gd->map->resize_m, 0, 0);
-
 }
 
-void ft_draw_coll(void *param)
+void	ft_draw_coll(void *param)
 {
-    t_gamedata *gad;
-    t_collect *collect;
-    int tile_idx = 0;
+	t_gamedata	*gad;
+	t_collect	*coin;
+	int			idx;
 
-    gad = (t_gamedata *)param;
-    collect = &gad->map->collects[0];
-
-    //if (collect->resize_c != NULL)
-    //    mlx_delete_image(gad->mlx, collect->resize_c);  // Liberar imagen anterior
-
-    collect->resize_c = mlx_new_image(gad->mlx, collect->image_c[tile_idx]->width, collect->image_c[tile_idx]->height);
-    scl_img(&collect->image_c[tile_idx], &collect->resize_c, collect->scale_c, gad);
-
-    if (collect->resize_c != NULL)
-        mlx_image_to_window(gad->mlx, collect->resize_c, collect->x, collect->y);
+	idx = 0;
+	gad = (t_gamedata *)param;
+	coin = &gad->map->collects[0];
+	//if (collect->resize_c != NULL)
+	//    mlx_delete_image(gad->mlx, collect->resize_c);  // Liberar imagen anterior
+	coin->resize_c = mlx_new_image(gad->mlx, coin->image_c[idx]->width, coin->image_c[idx]->height);
+	scl_img(&coin->image_c[idx], &coin->resize_c, coin->scale_c, gad);
+	if (coin->resize_c != NULL)
+		mlx_image_to_window(gad->mlx, coin->resize_c, coin->x, coin->y);
 }
 

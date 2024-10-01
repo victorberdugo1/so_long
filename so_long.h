@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/09/30 21:09:50 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/01 22:15:11 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,9 @@ typedef struct s_gamedata
 }	t_gamedata;
 
 void		player_init(t_player *player, mlx_t *mlx);
-void		ft_hook(mlx_key_data_t keydata, void* param);
+void		ft_hook(mlx_key_data_t keydata, void *param);
 void		free_resources(t_gamedata *gamedata);
 void		resize_hook(int32_t width, int32_t height, void *param);
-//void		scl_img(mlx_image_t **im, mlx_image_t **siz, float scl, mlx_t *mlx);
 uint32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 t_map		*init_map(int width, int height);
 t_map		*read_map(const char *filename);
@@ -122,7 +121,7 @@ void		pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy);
 t_coord		get_inner_sprite(t_map *mp, int y, int x);
 void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
 uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y);
-void	ft_draw(void *param);
-void	ft_draw_coll(void *param);
+void		ft_draw(void *param);
+void		ft_draw_coll(void *param);
 
 #endif 

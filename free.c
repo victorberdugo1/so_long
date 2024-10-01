@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 07:50:05 by victor            #+#    #+#             */
-/*   Updated: 2024/10/01 07:51:27 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/01 22:12:03 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	free_player(t_player *player, t_gamedata *gd)
 void	free_collects(t_collect *collects, int coin_count, t_gamedata *gd)
 {
 	int i;
+	int j;
 	t_collect *collect;
 
 	i = 0;
@@ -47,8 +48,8 @@ void	free_collects(t_collect *collects, int coin_count, t_gamedata *gd)
 
 		if (collect->image_c)
 		{
-			int j = 0;
-			while (collect->image_c[j])
+			j = 0;
+			while (collect->image_c[j] != NULL)
 			{
 				mlx_delete_image(gd->mlx, collect->image_c[j]);
 				j++;
@@ -61,10 +62,12 @@ void	free_collects(t_collect *collects, int coin_count, t_gamedata *gd)
 
 		if (collect->texture_c)
 			mlx_delete_texture(collect->texture_c);
-		free(collect);
+
 		i++;
 	}
+	free(collects);
 }
+
 void	free_map(t_map *map, t_gamedata *gd)
 {
 	int i;
