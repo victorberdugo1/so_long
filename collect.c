@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:31:26 by victor            #+#    #+#             */
-/*   Updated: 2024/10/01 22:45:01 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/02 21:04:55 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	collect_color(t_collect *coin, float angle)
 		idx++;
 	}
 }
-
 void	ft_randomize(void *param)
 {
 	t_gamedata		*gd;
@@ -88,47 +87,57 @@ void	copy_text_c(mlx_image_t *subimage, mlx_texture_t *texture, int x_offset, in
 	}
 }
 
-void	collect_init(t_collect *coll, int x, int y, mlx_t *mlx)
+void collect_init(t_collect *coll, int x, int y, mlx_t *mlx)
 {
-	int tiles_x, tiles_y, tile_idx, tx, ty;
+    int tiles_x, tiles_y, tile_idx, tx, ty;
 
-	coll->x = x;
-	coll->y = y;
-	coll->scale_c = 1.0f;
-	coll->pick = false;
+    coll->x = x;
+    coll->y = y;
+    coll->scale_c = 1.0f;
+    coll->pick = false;
+    coll->current_frame = 0;        // Frame inicial
+    coll->total_frames = 16;        // Asumimos que hay 16 frames (de 0 a 15)
+    coll->animation_speed = 0.1f;   // Velocidad de la animación
+    coll->frame_timer = 0;          // Inicializamos el temporizador de frames
 
-	coll->texture_c = mlx_load_png("textures/coin.png");
-	if (!coll->texture_c)
-		return ;
+    // Cargar la textura de la moneda
+    coll->texture_c = mlx_load_png("textures/coin.png");
+    if (!coll->texture_c)
+        return;
 
-	tiles_x = coll->texture_c->width / TILE_SIZE;
-	tiles_y = coll->texture_c->height / TILE_SIZE;
+    // Dividir la textura en tiles
+    tiles_x = coll->texture_c->width / TILE_SIZE;
+    tiles_y = coll->texture_c->height / TILE_SIZE;
 
-	coll->image_c = malloc(sizeof(mlx_image_t *) * (tiles_x * tiles_y));
-	if (!coll->image_c)
-	{
-		mlx_delete_texture(coll->texture_c);
-		return ;
-	}
-	tile_idx = 0;
-	for (ty = 0; ty < tiles_y; ty++)
-	{
-		for (tx = 0; tx < tiles_x; tx++)
-		{
-			coll->image_c[tile_idx] = mlx_new_image(mlx, TILE_SIZE, TILE_SIZE);
-			if (!coll->image_c[tile_idx])
-			{
-				while (tile_idx > 0)
-				{
-					tile_idx--;
-					mlx_delete_image(mlx, coll->image_c[tile_idx]);
-				}
-				free(coll->image_c);
-				mlx_delete_texture(coll->texture_c);
-				return ;
-			}
-			copy_text_c(coll->image_c[tile_idx], coll->texture_c, tx * TILE_SIZE, ty * TILE_SIZE);
-			tile_idx++;
-		}
-	}
+    coll->image_c = malloc(sizeof(mlx_image_t *) * (tiles_x * tiles_y + 1));  // +1 para NULL al final
+    if (!coll->image_c)
+    {
+        mlx_delete_texture(coll->texture_c);
+        return;
+    }
+
+    tile_idx = 0;
+    for (ty = 0; ty < tiles_y; ty++)
+    {
+        for (tx = 0; tx < tiles_x; tx++)
+        {
+            coll->image_c[tile_idx] = mlx_new_image(mlx, TILE_SIZE, TILE_SIZE);
+            if (!coll->image_c[tile_idx])
+            {
+                while (tile_idx > 0)
+                {
+                    tile_idx--;
+                    mlx_delete_image(mlx, coll->image_c[tile_idx]);
+                }
+                free(coll->image_c);
+                mlx_delete_texture(coll->texture_c);
+                return;
+            }
+            // Copiar la textura en los tiles
+            copy_text_c(coll->image_c[tile_idx], coll->texture_c, tx * TILE_SIZE, ty * TILE_SIZE);
+            tile_idx++;
+        }
+    }
+    coll->image_c[tile_idx] = NULL;  // Terminar con NULL para evitar sobrelecturas
 }
+

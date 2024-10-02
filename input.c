@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/01 22:40:14 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/03 00:14:25 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 	gd = (t_gamedata *)param;
 	if (!gd || !gd->player)
 		return ;
+	gd->window_width = width;
+	gd->window_height = height;
 	if (bg_image != NULL)
 		mlx_delete_image(gd->mlx, bg_image);
 	bg_image = mlx_new_image(gd->mlx, width, height);
@@ -76,7 +78,7 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 	gd->map->scale = fmaxf(x, y);
 	gd->player->scale = fmaxf(x, y);
 	scl_img(&gd->map->full_m, &gd->map->resize_m, fmaxf(x, y), gd);
-	scl_img(&gd->player->image_p[gd->player->current_frame], &gd->player->resize_p, fmaxf(x, y), gd);
+	//scl_img(&gd->player->image_p[gd->player->current_frame], &gd->player->resize_p, fmaxf(x, y), gd);
 }
 
 void	update_frame(t_player *player)
@@ -102,6 +104,8 @@ void	update_frame(t_player *player)
 			player->current_frame = (player->current_frame + 1) % 4 + 12;
 	}
 }
+
+
 
 void	ft_hook(mlx_key_data_t keydata, void *param)
 {
@@ -141,7 +145,7 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 		player->current_frame = (player->current_frame + 1) % 4 + frame_offset;
 	}
 }
-
+/*
 void	ft_draw(void *param)
 {
 	t_gamedata	*gd;
@@ -158,22 +162,138 @@ void	ft_draw(void *param)
 	mlx_image_to_window(gd->mlx, pl->resize_p, pl->xy_p.x, pl->xy_p.y);
 	if (gd->map->resize_m != NULL)
 		mlx_image_to_window(gd->mlx, gd->map->resize_m, 0, 0);
+}*/
+
+void collect_pickup(t_gamedata *gd, int collect_index)
+{
+    t_collect *coin = &gd->map->collects[collect_index];
+
+    if (!coin->pick)  // Solo si aún no ha sido recogida
+    {
+        coin->pick = true;
+        coin->current_frame = 6;  // Iniciar animación de recogida en el frame 6
+    }
 }
 
+void	update_collect_frame(t_collect *coin)
+{
+	float	last_frame_time = 0;
+	float			current_time;
+	float			delta_time;
+
+	current_time = mlx_get_time();
+	delta_time = current_time - last_frame_time;
+	last_frame_time = current_time;
+
+	coin->frame_timer += delta_time;
+	if (coin->frame_timer >= coin->animation_speed)
+	{
+		coin->frame_timer -= coin->animation_speed;
+
+		if (!coin->pick)
+			coin->current_frame = (coin->current_frame + 1) % 8;
+		else if (coin->current_frame >= 6 && coin->current_frame < 15)
+			coin->current_frame++;
+	}
+}
+/*
 void	ft_draw_coll(void *param)
 {
-	t_gamedata	*gad;
+	t_gamedata	*gd;
 	t_collect	*coin;
 	int			idx;
 
+	gd = (t_gamedata *)param;
 	idx = 0;
-	gad = (t_gamedata *)param;
-	coin = &gad->map->collects[0];
-	//if (collect->resize_c != NULL)
-	//    mlx_delete_image(gad->mlx, collect->resize_c);  // Liberar imagen anterior
-	coin->resize_c = mlx_new_image(gad->mlx, coin->image_c[idx]->width, coin->image_c[idx]->height);
-	scl_img(&coin->image_c[idx], &coin->resize_c, coin->scale_c, gad);
-	if (coin->resize_c != NULL)
-		mlx_image_to_window(gad->mlx, coin->resize_c, coin->x, coin->y);
+
+	while (idx < gd->coins)
+	{
+		coin = &gd->map->collects[idx];
+
+		if (!coin->pick)
+		{
+			//if (coin->resize_c != NULL)
+				//mlx_delete_image(gd->mlx, coin->resize_c);
+			update_collect_frame(coin);
+			coin->resize_c = mlx_new_image(gd->mlx, coin->image_c[coin->current_frame]->width, coin->image_c[coin->current_frame]->height);
+			scl_img(&coin->image_c[coin->current_frame], &coin->resize_c, coin->scale_c, gd);
+
+			mlx_image_to_window(gd->mlx, coin->resize_c, coin->x, coin->y);
+		}
+		idx++;
+	}
+}*/
+void ft_draw(void *param)
+{
+    t_gamedata *gd;
+    t_player *pl;
+    int map_x_offset;
+    int map_y_offset;
+
+    gd = (t_gamedata *)param;
+    pl = gd->player;
+
+	map_x_offset = (gd->window_width / 2) - ((pl->xy_p.x) + (pl->scale * TILE_SIZE) / 2);
+    map_y_offset = (gd->window_height / 2) - ((pl->xy_p.y) + (pl->scale * TILE_SIZE) / 2);
+
+	if (pl->resize_p != NULL)
+        mlx_delete_image(gd->mlx, pl->resize_p);
+
+    update_frame(pl);
+    pl->resize_p = mlx_new_image(gd->mlx, pl->image_p[pl->current_frame]->width,
+                                  pl->image_p[pl->current_frame]->height);
+    scl_img(&pl->image_p[pl->current_frame], &pl->resize_p, pl->scale, gd);
+
+    mlx_image_to_window(gd->mlx, pl->resize_p, (gd->window_width / 2) - (pl->resize_p->width / 2),
+                        (gd->window_height / 2) - (pl->resize_p->height / 2));
+
+    if (gd->map->resize_m != NULL)
+        mlx_image_to_window(gd->mlx, gd->map->resize_m, map_x_offset, map_y_offset);
+	//scl_img(&gd->map->full_m, &gd->map->resize_m, pl->scale, gd);
+
+
+}
+
+void ft_draw_coll(void *param)
+{
+    t_gamedata *gd;
+    t_collect *coin;
+    int idx;
+    int map_x_offset;
+    int map_y_offset;
+
+    gd = (t_gamedata *)param;
+    //map_x_offset = (WIDTH / 2) - (gd->player->xy_p.x * gd->player->scale);
+    //map_y_offset = (HEIGHT / 2) - (gd->player->xy_p.y * gd->player->scale);
+	map_x_offset = (gd->window_width / 2) - ((gd->player->xy_p.x) + (gd->player->scale * TILE_SIZE) / 2);
+    map_y_offset = (gd->window_height / 2) - ((gd->player->xy_p.y) + (gd->player->scale * TILE_SIZE) / 2);
+    for (idx = 0; idx < gd->coins; idx++)
+    {
+        coin = &gd->map->collects[idx];
+        coin->scale_c = gd->player->scale;
+
+        if (!coin->pick)
+        {
+            // Borra la imagen anterior de la moneda si existe
+            //if (coin->resize_c != NULL)
+              //  mlx_delete_image(gd->mlx, coin->resize_c);
+
+            // Actualiza el frame de la moneda
+            update_collect_frame(coin);
+            coin->resize_c = mlx_new_image(gd->mlx, coin->image_c[coin->current_frame]->width, 
+                                             coin->image_c[coin->current_frame]->height);
+            scl_img(&coin->image_c[coin->current_frame], &coin->resize_c, coin->scale_c, gd);
+
+            // Recuperar la posición del coleccionable desde collectible_pos
+            t_coord collectible_pos = gd->map->collectible_pos[idx];
+
+            // Calcular la posición final teniendo en cuenta el escalado
+            int final_x = (collectible_pos.x * coin->scale_c) + map_x_offset;
+            int final_y = (collectible_pos.y * coin->scale_c) + map_y_offset;
+
+            // Dibuja la moneda en la ventana
+            mlx_image_to_window(gd->mlx, coin->resize_c, final_x, final_y);
+        }
+    }
 }
 

@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/01 22:40:03 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/02 22:40:04 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,12 @@ void	init_collectables(t_gamedata *gd)
 
 	idx = 0;
 	y = 0;
+	gd->map->collectible_pos = malloc(gd->coins  * sizeof(t_coord));
+    if (!gd->map->collectible_pos)
+    {
+       exit(EXIT_FAILURE);// Error en la asignación de memoria
+    }
+
 	while (y < gd->map->hgt)
 	{
 		x = 0;
@@ -55,6 +61,8 @@ void	init_collectables(t_gamedata *gd)
 			if (gd->map->grid[y][x] == 'C')
 			{
 				collect_init(&gd->map->collects[idx], x, y, gd->mlx);
+				gd->map->collectible_pos[idx].x = x;
+				gd->map->collectible_pos[idx].y = y;
 				idx++;
 			}
 			x++;
@@ -65,6 +73,8 @@ void	init_collectables(t_gamedata *gd)
 
 int	init_collectables_from_map(t_gamedata *gamedata)
 {
+gamedata->player->xy_p.x = gamedata->map->player_pos.x;
+gamedata->player->xy_p.y = gamedata->map->player_pos.y;
 	gamedata->coins = count_collectables(gamedata->map);
 	gamedata->map->collects = malloc(sizeof(t_collect) * gamedata->coins);
 	if (!gamedata->map->collects)

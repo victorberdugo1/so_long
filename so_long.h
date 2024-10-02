@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/01 22:15:11 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/02 23:02:41 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,10 @@ typedef struct s_collect
 	int				x;
 	int				y;
 	bool			pick;
+	int				current_frame;   // Frame actual
+	int				total_frames;    // Total de frames de animación
+	float			animation_speed; // Velocidad de animación
+	float			frame_timer;
 }	t_collect;
 
 typedef struct s_map
@@ -86,6 +90,8 @@ typedef struct s_map
 	int				exit_count;
 	int				player_count;
 	t_collect		*collects;
+	t_coord        player_pos;         // Posición del jugador
+	t_coord        *collectible_pos;
 	bool			valid;
 	bool			closed;
 }	t_map;
