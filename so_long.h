@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/02 23:02:41 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/03 22:01:49 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,29 +50,14 @@ typedef struct s_player
 	float			frame_timer;
 }	t_player;
 
-typedef struct s_enemy
-{
-	mlx_image_t		*image_e;
-	mlx_texture_t	*texture_e;
-	float			scale;
-	int				x;
-	int				y;
-	int				health;
-}	t_enemy;
-
 typedef struct s_collect
 {
-	mlx_image_t		**image_c;
+	mlx_image_t		*image_c;
 	mlx_image_t		*resize_c;
 	mlx_texture_t	*texture_c;
 	float			scale_c;
-	int				x;
-	int				y;
+	t_coord			xy_c;
 	bool			pick;
-	int				current_frame;   // Frame actual
-	int				total_frames;    // Total de frames de animación
-	float			animation_speed; // Velocidad de animación
-	float			frame_timer;
 }	t_collect;
 
 typedef struct s_map
@@ -100,7 +85,6 @@ typedef struct s_gamedata
 {
 	mlx_t		*mlx;
 	t_player	*player;
-	t_enemy		*enemy;
 	int			coins;
 	t_map		*map;
 	int32_t		window_width;
@@ -117,7 +101,6 @@ t_map		*read_map(const char *filename);
 int			map_size(const char *filename, int *width, int *height);
 t_map		*fill_map(const char *filename, int width, t_map *map);
 void		collect_init(t_collect *coll, int x, int y, mlx_t *mlx);
-void		ft_randomize(void *param);
 void		draw_map(t_map *map, mlx_t *mlx);
 int			all_collected(t_map *map);
 uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width);
@@ -129,5 +112,7 @@ void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
 uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y);
 void		ft_draw(void *param);
 void		ft_draw_coll(void *param);
+void		ft_draw_map(void *param);
+void		ft_render(void *param);
 
 #endif 

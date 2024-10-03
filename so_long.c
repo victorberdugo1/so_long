@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/02 22:40:04 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/03 22:47:54 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,8 @@ void	init_collectables(t_gamedata *gd)
 	gd->map->collectible_pos = malloc(gd->coins  * sizeof(t_coord));
     if (!gd->map->collectible_pos)
     {
-       exit(EXIT_FAILURE);// Error en la asignación de memoria
+       exit(EXIT_FAILURE);
     }
-
 	while (y < gd->map->hgt)
 	{
 		x = 0;
@@ -73,8 +72,8 @@ void	init_collectables(t_gamedata *gd)
 
 int	init_collectables_from_map(t_gamedata *gamedata)
 {
-gamedata->player->xy_p.x = gamedata->map->player_pos.x;
-gamedata->player->xy_p.y = gamedata->map->player_pos.y;
+	gamedata->player->xy_p.x = gamedata->map->player_pos.x * TILE_SIZE + 32;
+	gamedata->player->xy_p.y = gamedata->map->player_pos.y * TILE_SIZE + 32;
 	gamedata->coins = count_collectables(gamedata->map);
 	gamedata->map->collects = malloc(sizeof(t_collect) * gamedata->coins);
 	if (!gamedata->map->collects)
@@ -109,9 +108,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
 	mlx_key_hook(gamedata.mlx, ft_hook, &gamedata);
-	mlx_loop_hook(gamedata.mlx, ft_randomize, &gamedata);
-	mlx_loop_hook(gamedata.mlx, ft_draw, &gamedata);
-	mlx_loop_hook(gamedata.mlx, ft_draw_coll, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_render, &gamedata);
 	mlx_loop(mlx);
 	return (free_resources(&gamedata), mlx_terminate(mlx), EXIT_SUCCESS);
 }
