@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/03 22:01:49 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/04 10:24:38 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct s_collect
 {
 	mlx_image_t		*image_c;
 	mlx_image_t		*resize_c;
-	mlx_texture_t	*texture_c;
+	mlx_texture_t	*txt_c;
 	float			scale_c;
 	t_coord			xy_c;
 	bool			pick;
@@ -75,8 +75,8 @@ typedef struct s_map
 	int				exit_count;
 	int				player_count;
 	t_collect		*collects;
-	t_coord        player_pos;         // Posición del jugador
-	t_coord        *collectible_pos;
+	t_coord			player_pos;
+	t_coord			*collectible_pos;
 	bool			valid;
 	bool			closed;
 }	t_map;

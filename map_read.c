@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/03 22:35:24 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/04 10:29:44 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 		{
 			map->grid[h][w] = line[w];
 			if (line[w] == 'P')
-            {
-                map->player_pos.x = w;
-                map->player_pos.y = h;
-            }
+			{
+				map->player_pos.x = w;
+				map->player_pos.y = h;
+			}
 			w++;
 		}
 		free(line);
@@ -111,24 +111,23 @@ char	**allocate_grid(int width, int height)
 	return (grid);
 }
 
-t_map *init_map(int width, int height)
+t_map	*init_map(int width, int height)
 {
-    t_map *map;
+	t_map	*map;
 
-    map = malloc(sizeof(t_map));
-    if (!map)
-        return (NULL);
-    map->wdt = width;
-    map->hgt = height;
-    map->exit_count = 0;
-    map->player_count = 0;
-    map->valid = true;
-    map->closed = false;
-    map->grid = allocate_grid(width, height);
-    if (!map->grid)
-        return (free(map), NULL);
-    map->player_pos.x = -1;
+	map = malloc(sizeof(t_map));
+	if (!map)
+		return (NULL);
+	map->wdt = width;
+	map->hgt = height;
+	map->exit_count = 0;
+	map->player_count = 0;
+	map->valid = true;
+	map->closed = false;
+	map->grid = allocate_grid(width, height);
+	if (!map->grid)
+		return (free(map), NULL);
+	map->player_pos.x = -1;
 	map->player_pos.y = -1;
-    return (map);
+	return (map);
 }
-
