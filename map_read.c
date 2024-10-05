@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/04 10:29:44 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/05 22:47:59 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,12 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 	line = get_next_line(file);
 	while (line != NULL)
 	{
-		w = 0;
-		while (w < width)
+		w = -1;
+		while (++w < width)
 		{
 			map->grid[h][w] = line[w];
 			if (line[w] == 'P')
-			{
-				map->player_pos.x = w;
-				map->player_pos.y = h;
-			}
-			w++;
+				map->player_pos = (t_coord){w, h};
 		}
 		free(line);
 		h++;

@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/03 22:47:54 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/05 23:24:37 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,9 @@ void	init_collectables(t_gamedata *gd)
 
 	idx = 0;
 	y = 0;
-	gd->map->collectible_pos = malloc(gd->coins  * sizeof(t_coord));
-    if (!gd->map->collectible_pos)
-    {
-       exit(EXIT_FAILURE);
-    }
+	gd->map->collectible_pos = malloc(gd->coins * sizeof(t_coord));
+	if (!gd->map->collectible_pos)
+		exit(EXIT_FAILURE);
 	while (y < gd->map->hgt)
 	{
 		x = 0;

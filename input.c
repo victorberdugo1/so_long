@@ -6,22 +6,26 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/04 10:26:30 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/05 23:21:25 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void bgclean(mlx_t *mlx, int32_t width, int32_t height)
+void	bgclean(mlx_t *mlx, int32_t width, int32_t height)
 {
-	mlx_image_t *bg_image = NULL;
-	int32_t j, i;
-	uint32_t color = ft_pixel(0, 122, 51, 255);
+	mlx_image_t	*bg_image;
+	int32_t		j;
+	int32_t		i;
+	uint32_t	color;
+
+	bg_image = NULL;
+	color = ft_pixel(0, 122, 51, 255);
 	if (bg_image != NULL)
 		mlx_delete_image(mlx, bg_image);
 	bg_image = mlx_new_image(mlx, width, height);
-	if (!bg_image) 
-		return;
+	if (!bg_image)
+		return ;
 	j = -1;
 	while (++j < height)
 	{
@@ -55,8 +59,6 @@ void	update_frame(t_player *player)
 			player->current_frame = (player->current_frame + 1) % 4 + 12;
 	}
 }
-
-
 
 void	scl_img(mlx_image_t **im, mlx_image_t **siz, float scl, t_gamedata *gd, t_coord pos)
 {
@@ -263,7 +265,7 @@ void ft_draw_coll(void *param)
 
 void collect_pickup(t_gamedata *gd)
 {
-	int pickup_range = 32;	
+	int pickup_range = 64;	
 	float player_real_x = gd->player->xy_p.x;
 	float player_real_y = gd->player->xy_p.y;
 
@@ -277,7 +279,10 @@ void collect_pickup(t_gamedata *gd)
 					player_real_y >= (coin_real_y - pickup_range / 2) &&
 					player_real_y <= (coin_real_y + pickup_range / 2)) {
 
-				coin->pick = true; 
+				coin->pick = true;
+				coin->xy_c.x = -1000; 
+    			coin->xy_c.y = -1000;
+				resize_hook(gd->window_width, gd->window_height, gd);
 				//gd->coins--;
 				break;
 			}

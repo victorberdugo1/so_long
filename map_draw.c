@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:55:39 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/03 23:03:35 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/05 22:19:21 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,7 @@ void	draw_map(t_map *map, mlx_t *mlx)
 		return (mlx_delete_image(mlx, map->full_m));
 	map->texture_m = mlx_load_png("textures/map.png");
 	if (!map->texture_m)
-	{
-		free(map->tiles);
-		mlx_delete_image(mlx, map->full_m);
-		return ;
-	}
+		return (free(map->tiles), mlx_delete_image(mlx, map->full_m));
 	create_full_image(map, mlx);
 	i = -1;
 	while (++i < map->hgt)
