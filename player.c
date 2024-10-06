@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:43:15 by victor            #+#    #+#             */
-/*   Updated: 2024/10/02 21:53:40 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/06 22:09:02 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,11 @@ void	player_init(t_player *player, mlx_t *mlx)
 	player->scale = scale;
 	player->xy_p.x = 0;
 	player->xy_p.y = 0;
+	player->speed = 1;
+	player->dest_p = player->xy_p;
+	player->moving = false;
 	player->win = false;
-	player->animation_speed = 1.0f;
+	player->animation_speed = 0.1f;
 	player->frame_timer = 0.0f;
 	player->current_frame = 0;
 	player->total_frames = 16;

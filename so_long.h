@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/04 10:24:38 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/06 23:07:56 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,14 @@ typedef struct s_player
 	mlx_texture_t	*texture_p;
 	float			scale;
 	t_coord			xy_p;
+	t_coord			dest_p;
 	bool			win;
 	int				current_frame;
 	int				total_frames;
 	float			animation_speed;
 	float			frame_timer;
+	bool			moving;
+	float			speed;
 }	t_player;
 
 typedef struct s_collect
@@ -114,5 +117,8 @@ void		ft_draw(void *param);
 void		ft_draw_coll(void *param);
 void		ft_draw_map(void *param);
 void		ft_render(void *param);
+void		combine_tiles(t_map *map);
+int			count_collectables(t_map *map);
+void		process_door_tile(t_map *map, mlx_t *mlx, int i, int j);
 
 #endif 
