@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:43:15 by victor            #+#    #+#             */
-/*   Updated: 2024/10/07 12:35:58 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:04:02 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	player_init(t_player *player, mlx_t *mlx)
 	player->animation_speed = 0.1f;
 	player->frame_timer = 0.0f;
 	player->current_frame = 0;
+	player->move_count = 0;
 	player->total_frames = 16;
 	player->image_p = malloc(sizeof(mlx_image_t *) * player->total_frames);
 	if (!player->image_p)

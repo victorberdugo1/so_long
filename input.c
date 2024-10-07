@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/07 17:53:29 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:52:39 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,7 +314,27 @@ void	collect_pickup(t_gamedata *gd)
 	}
 }
 
-void	ft_move(t_player *player)
+bool can_move_to(int x, int y, t_gamedata *gd)
+{
+if (x < 0 || x >= gd->map->wdt || y < 0 || y >= gd->map->hgt)
+    {
+        return false;
+    }
+    
+    if (gd->map->grid[y][x] == '1')
+    {
+        return false;
+    }
+    if (gd->map->grid[y][x] == 'E' && gd->map->collect_flag)
+    {
+        ft_printf("¡Has ganado el juego!\n");
+        mlx_close_window(gd->mlx);  // Cierra la ventana o finaliza el juego
+        return false; // No se puede mover a 'E' para ganar, ya que el juego ha terminado
+    }
+    return true;
+}
+
+void	ft_move(t_player *player, t_gamedata *gd)
 {
 	if (!player->moving)
 	{
@@ -325,12 +345,21 @@ void	ft_move(t_player *player)
 	float target_y = (player->dest_p.y * TILE_SIZE) + 32;
 	float dist_x = target_x - player->xy_p.x;
 	float dist_y = target_y - player->xy_p.y;
+	int target_cell_x = (int)(target_x / TILE_SIZE);
+    int target_cell_y = (int)(target_y / TILE_SIZE);
 
+    if (!can_move_to(target_cell_x, target_cell_y, gd))
+	{
+        player->moving = false;
+        return ;
+    }
 	if (fabsf(dist_x) < 1 && fabsf(dist_y) < 1)
 	{
 		player->xy_p.x = target_x;
 		player->xy_p.y = target_y;
 		player->moving = false;
+		player->move_count += 1;
+		ft_printf("Move count: %d\n", player->move_count);
 	}
 	else
 	{	
@@ -356,7 +385,7 @@ void	ft_render(void *param)
 	t_gamedata	*gd;
 
 	gd = (t_gamedata *)param;
-	ft_move(gd->player);
+	ft_move(gd->player, gd);
 	ft_draw(param);   
 	ft_draw_coll(param);
 	ft_draw_map(param);
@@ -417,6 +446,7 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 	if (frame_offset >= 0)
 	{
 		player->current_frame = (player->current_frame + 1) % 4 + frame_offset;
+
 		collect_pickup(gd);
 	}
 }

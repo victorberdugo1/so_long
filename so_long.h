@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/07 17:34:56 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:02:12 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_player
 	bool			win;
 	int				current_frame;
 	int				total_frames;
+	int				move_count;
 	float			animation_speed;
 	float			frame_timer;
 	bool			moving;
