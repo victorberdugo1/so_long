@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/15 13:10:35 by vberdugo          #+#    #+#              #
-#    Updated: 2024/09/10 19:11:47 by victor           ###   ########.fr        #
+#    Updated: 2024/10/07 17:29:18 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ OBJS = ${SRC:%.c=%.o}
 
 AR = ar rcs
 
-CC = cc
+CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -I.
 

@@ -6,11 +6,29 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:55:39 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/06 22:16:51 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:55:46 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	process_door_tile(t_map *map, mlx_t *mlx, int i, int j)
+{
+	mlx_image_t	*subimage;
+	t_coord		coords;
+
+	if (map->grid[i][j] != 'E')
+		return ;
+	coords = (t_coord){3, 3};
+	subimage = mlx_new_image(mlx, TILE_SIZE, TILE_SIZE);
+	if (!subimage)
+	{
+		mlx_delete_texture(map->texture_m);
+		return (mlx_close_window(mlx), free(map->tiles));
+	}
+	pxls_subim(subimage, map->texture_m, coords.x, coords.y);
+	map->tiles[i * map->wdt + j] = subimage;
+}
 
 void	create_full_image(t_map *map, mlx_t *mlx)
 {
@@ -65,10 +83,6 @@ void	combine_tiles(t_map *map)
 	int	i;
 	int	j;
 
-	if (map->wdt > map->hgt)
-		map->orient = 0;
-	else
-		map->orient = 1;
 	i = -1;
 	while (++i < map->hgt)
 	{

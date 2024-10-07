@@ -6,15 +6,15 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:31:26 by victor            #+#    #+#             */
-/*   Updated: 2024/10/04 10:22:47 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/07 17:14:40 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-uint32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
+uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
 {
-	return (r << 24 | g << 16 | b << 8 | a);
+	return ((r << 24) | (g << 16) | (b << 8) | a);
 }
 
 void	copy_text_c(mlx_image_t *image, mlx_texture_t *texture)

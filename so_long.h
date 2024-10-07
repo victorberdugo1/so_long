@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/06 23:07:56 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/07 17:34:56 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,14 @@ typedef struct s_map
 	float			scale;
 	int				wdt;
 	int				hgt;
-	int				orient;
+	//int				orient;
 	t_coord			xy_m;
 	int				exit_count;
 	int				player_count;
 	t_collect		*collects;
 	t_coord			player_pos;
 	t_coord			*collectible_pos;
+	bool			collect_flag;
 	bool			valid;
 	bool			closed;
 }	t_map;
@@ -98,7 +99,7 @@ void		player_init(t_player *player, mlx_t *mlx);
 void		ft_hook(mlx_key_data_t keydata, void *param);
 void		free_resources(t_gamedata *gamedata);
 void		resize_hook(int32_t width, int32_t height, void *param);
-uint32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
+uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
 t_map		*init_map(int width, int height);
 t_map		*read_map(const char *filename);
 int			map_size(const char *filename, int *width, int *height);
@@ -120,5 +121,6 @@ void		ft_render(void *param);
 void		combine_tiles(t_map *map);
 int			count_collectables(t_map *map);
 void		process_door_tile(t_map *map, mlx_t *mlx, int i, int j);
+void		free_collects(t_collect *collects, int coin_count, t_gamedata *gd);
 
 #endif 

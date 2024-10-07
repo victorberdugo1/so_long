@@ -6,31 +6,11 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 21:56:07 by victor            #+#    #+#             */
-/*   Updated: 2024/10/06 23:19:46 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:55:04 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-void process_door_tile(t_map *map, mlx_t *mlx, int i, int j)
-{
-    mlx_image_t *subimage;
-    t_coord coords;
-
-    if (map->grid[i][j] != 'E')
-        return;
-
-    coords = (t_coord){3, 3};
-    subimage = mlx_new_image(mlx, TILE_SIZE, TILE_SIZE);
-    if (!subimage)
-    {
-        mlx_delete_texture(map->texture_m);
-        return (mlx_close_window(mlx), free(map->tiles));
-    }
-
-    pxls_subim(subimage, map->texture_m, coords.x, coords.y);
-    map->tiles[i * map->wdt + j] = subimage;
-}
 
 void	pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy)
 {
@@ -79,25 +59,27 @@ void	process_tile(t_map *map, mlx_t *mlx, int i, int j)
 	map->tiles[i * map->wdt + j] = subimage;
 }
 
-int all_collected(t_map *m)
+int	all_collected(t_map *m)
 {
-    int total;
-    int collected = 0;
-    int i = 0;
+	int	total;
+	int	collected;
+	int	i;
 
-    if (m->collects == NULL)
-        return 0;
-    total = count_collectables(m);
-    while (i < total)
-    {
-        if (m->collects[i].pick)
-            collected++;
-        i++;
-    }
-    if (collected == total)
-        return 1;
-    else
-        return 0;
+	collected = 0;
+	i = 0;
+	if (m->collects == NULL)
+		return (0);
+	total = count_collectables(m);
+	while (i < total)
+	{
+		if (m->collects[i].pick)
+			collected++;
+		i++;
+	}
+	if (collected == total)
+		return (1);
+	else
+		return (0);
 }
 
 t_coord	get_border_sprite(t_map *map, int coord_y, int coord_x)
@@ -145,8 +127,6 @@ t_coord	get_inner_sprite(t_map *mp, int y, int x)
 	}
 	else if (mp->grid[y][x] == 'E')
 	{
-		//if (all_collected(mp))
-		//	return ((t_coord){3, 3});
 		return ((t_coord){2, 3});
 	}
 	return ((t_coord){-1, -1});

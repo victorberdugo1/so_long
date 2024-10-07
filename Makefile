@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/10/06 12:33:51 by victor           ###   ########.fr        #
+#    Updated: 2024/10/07 17:28:13 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,9 @@ SRC = so_long.c input.c collect.c map_read.c player.c map.c pixel_utils.c \
 
 OBJ = $(SRC:.c=.o)
 
-CC = cc
+CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc
+CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc -g #-fsanitize=address,undefined -g
 
 LDFLAGS = $(LIBFT) $(MINI) -lglfw -lm
 
@@ -41,7 +41,7 @@ $(LIBFT):
 $(MINI):
 	@cmake MLX42 -B MLX42/build && make -C MLX42/build -j4
 
-%.o: %.c so_long.h 
+%.o: %.c so_long.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
