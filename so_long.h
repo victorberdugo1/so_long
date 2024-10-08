@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/07 21:02:12 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/08 13:43:05 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ typedef struct s_map
 	float			scale;
 	int				wdt;
 	int				hgt;
-	//int				orient;
 	t_coord			xy_m;
 	int				exit_count;
 	int				player_count;

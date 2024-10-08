@@ -6,59 +6,71 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/07 21:38:58 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/08 13:36:19 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-bool validate_map(t_map *map) {
-    int collectible_count = 0;
-    int exit_count = 0;
-    int player_count = 0;
-    int y = 0;
+bool	validate_map(t_map *map)
+{
+	int		collectible_count;
+	int		exit_count;
+	int		player_count;
+	int		y;
+	int		x;
+	char	cell;
 
-    while (y < map->hgt) {
-        int x = 0;
-        while (x < map->wdt) {
-            char cell = map->grid[y][x];
-
-            if (cell != '0' && cell != '1' && cell != 'C' && cell != 'E' && cell != 'P' && cell != '\n')
+	collectible_count = 0;
+	exit_count = 0;
+	player_count = 0;
+	y = 0;
+	while (y < map->hgt)
+	{
+		x = 0;
+		while (x < map->wdt)
+		{
+			cell = map->grid[y][x];
+			if (cell != '0' && cell != '1' && cell != 'C' && cell != 'E' && cell != 'P' && cell != '\n')
 			{
-                printf("Error\nInvalid character '%c' in the map at (%d, %d).\n", cell, y, x);
-                return false;
-            }
-
-            if (cell == 'C') collectible_count++;
-            else if (cell == 'E') exit_count++;
-            else if (cell == 'P') {
-                player_count++;
-                map->player_pos.x = x;
-                map->player_pos.y = y;
-            }
-            x++;
-        }
-        // Asegúrate de que cada fila tiene la longitud correcta
-        if ((size_t)ft_strlen(map->grid[y]) != (size_t)map->wdt) {
-            printf("Error\nThe map is not rectangular.\n");
-            return false;
-        }
-        y++;
-    }
-
-    if (collectible_count < 1) {
-        printf("Error\nThe map must contain at least one collectible.\n");
-        return false;
-    }
-    if (exit_count < 1) {
-        printf("Error\nThe map must contain at least one exit.\n");
-        return false;
-    }
-    if (player_count != 1) {
-        printf("Error\nThe map must contain exactly one player position.\n");
-        return false;
-    }
-    return true;
+				printf("Error\nInvalid character '%c' in the map at (%d, %d).\n", cell, y, x);
+				return (false);
+			}
+			if (cell == 'C')
+				collectible_count++;
+			else if (cell == 'E')
+				exit_count++;
+			else if (cell == 'P')
+			{
+				player_count++;
+				map->player_pos.x = x;
+				map->player_pos.y = y;
+			}
+			x++;
+		}
+		if ((size_t)ft_strlen(map->grid[y]) != (size_t)map->wdt)
+		{
+			printf("Error\nThe map is not rectangular.\n");
+			return (false);
+		}
+		y++;
+	}
+	if (collectible_count < 1)
+	{
+		printf("Error\nThe map must contain at least one collectible.\n");
+		return (false);
+	}
+	if (exit_count < 1)
+	{
+		printf("Error\nThe map must contain at least one exit.\n");
+		return (false);
+	}
+	if (player_count != 1)
+	{
+		printf("Error\nThe map must contain exactly one player position.\n");
+		return (false);
+	}
+	return (true);
 }
 
 t_map	*read_map(const char *filename)

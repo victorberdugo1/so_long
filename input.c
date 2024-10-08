@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/07 21:52:39 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/08 15:36:51 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,16 +217,16 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 void	ft_draw_map(void *param)
 {
 	t_gamedata	*gd;
-	int			map_x_offset;
-	int			map_y_offset;
+	int			x_off;
+	int			y_off;
 
 	gd = (t_gamedata *)param;
-	map_x_offset = (gd->window_width / 2) - (gd->player->xy_p.x * gd->player->scale);
-	map_y_offset = (gd->window_height / 2) - (gd->player->xy_p.y * gd->player->scale);
+	x_off = (gd->window_width / 2) - (gd->player->xy_p.x * gd->player->scale);
+	y_off = (gd->window_height / 2) - (gd->player->xy_p.y * gd->player->scale);
 	if (gd->map->resize_m && gd->map->resize_m->count > 0)
 	{
-		gd->map->resize_m->instances[0].x = map_x_offset;
-		gd->map->resize_m->instances[0].y = map_y_offset;
+		gd->map->resize_m->instances[0].x = x_off;
+		gd->map->resize_m->instances[0].y = y_off;
 	}
 }
 
@@ -234,8 +234,8 @@ void	ft_draw_coll(void *param)
 {
 	t_gamedata	*gd;
 	t_collect	*coin;
-	int			coin_x_offset;
-	int			coin_y_offset;
+	int			x_off;
+	int			y_off;
 	int			idx;
 
 	gd = (t_gamedata *)param;
@@ -247,10 +247,10 @@ void	ft_draw_coll(void *param)
 		coin = &gd->map->collects[idx];
 		if (!coin->pick)
 		{
-			coin_x_offset = (gd->window_width / 2) - ((gd->player->xy_p.x - coin->xy_c.x * TILE_SIZE) * gd->player->scale);
-			coin_y_offset = (gd->window_height / 2) - ((gd->player->xy_p.y - coin->xy_c.y * TILE_SIZE) * gd->player->scale);
-			coin->resize_c->instances[0].x = coin_x_offset;
-			coin->resize_c->instances[0].y = coin_y_offset;
+			x_off = (gd->window_width / 2) - ((gd->player->xy_p.x - coin->xy_c.x * TILE_SIZE) * gd->player->scale);
+			y_off = (gd->window_height / 2) - ((gd->player->xy_p.y - coin->xy_c.y * TILE_SIZE) * gd->player->scale);
+			coin->resize_c->instances[0].x = x_off;
+			coin->resize_c->instances[0].y = y_off;
 		}
 	}
 }
@@ -294,17 +294,17 @@ void	collect_pickup(t_gamedata *gd)
 		{
 			coin_real_x = coin->xy_c.x * TILE_SIZE + TILE_SIZE / 2;
 			coin_real_y = coin->xy_c.y * TILE_SIZE + TILE_SIZE / 2;
-			if (player_real_x >= (coin_real_x - pickup_range / 2) &&
-					player_real_x <= (coin_real_x + pickup_range / 2) &&
-					player_real_y >= (coin_real_y - pickup_range / 2) &&
-					player_real_y <= (coin_real_y + pickup_range / 2))
+			if (player_real_x >= (coin_real_x - pickup_range / 2)
+				&& player_real_x <= (coin_real_x + pickup_range / 2)
+				&& player_real_y >= (coin_real_y - pickup_range / 2)
+				&& player_real_y <= (coin_real_y + pickup_range / 2))
 			{
 				coin->pick = true;
-				coin->xy_c.x = -1000; 
+				coin->xy_c.x = -1000;
 				coin->xy_c.y = -1000;
 				if (all_collected(gd->map) && !gd->map->collect_flag)
 				{
-					gd->map->collect_flag = true; 
+					gd->map->collect_flag = true;
 					redraw_map(gd->map, gd->mlx);
 					resize_hook(gd->window_width, gd->window_height, gd);
 				}
@@ -314,45 +314,44 @@ void	collect_pickup(t_gamedata *gd)
 	}
 }
 
-bool can_move_to(int x, int y, t_gamedata *gd)
+bool	can_move_to(int x, int y, t_gamedata *gd)
 {
-if (x < 0 || x >= gd->map->wdt || y < 0 || y >= gd->map->hgt)
-    {
-        return false;
-    }
-    
-    if (gd->map->grid[y][x] == '1')
-    {
-        return false;
-    }
-    if (gd->map->grid[y][x] == 'E' && gd->map->collect_flag)
-    {
-        ft_printf("¡Has ganado el juego!\n");
-        mlx_close_window(gd->mlx);  // Cierra la ventana o finaliza el juego
-        return false; // No se puede mover a 'E' para ganar, ya que el juego ha terminado
-    }
-    return true;
+	if (x < 0 || x >= gd->map->wdt || y < 0 || y >= gd->map->hgt)
+		return (false);
+	if (gd->map->grid[y][x] == '1')
+		return (false);
+	if (gd->map->grid[y][x] == 'E' && gd->map->collect_flag)
+	{
+		ft_printf("¡Has ganado el juego!\n");
+		mlx_close_window(gd->mlx);
+		return (false);
+	}
+	return (true);
 }
 
 void	ft_move(t_player *player, t_gamedata *gd)
 {
-	if (!player->moving)
-	{
-		return;
-	}
-	update_frame(player);
-	float target_x = (player->dest_p.x * TILE_SIZE) + 32;  
-	float target_y = (player->dest_p.y * TILE_SIZE) + 32;
-	float dist_x = target_x - player->xy_p.x;
-	float dist_y = target_y - player->xy_p.y;
-	int target_cell_x = (int)(target_x / TILE_SIZE);
-    int target_cell_y = (int)(target_y / TILE_SIZE);
+	float	target_x;
+	float	target_y;
+	float	dist_x;
+	float	dist_y;
+	int		target_cell_x;
+	int		target_cell_y;
 
-    if (!can_move_to(target_cell_x, target_cell_y, gd))
+	if (!player->moving)
+		return ;
+	update_frame(player);
+	target_x = (player->dest_p.x * TILE_SIZE) + 32;
+	target_y = (player->dest_p.y * TILE_SIZE) + 32;
+	dist_x = target_x - player->xy_p.x;
+	dist_y = target_y - player->xy_p.y;
+	target_cell_x = (int)(target_x / TILE_SIZE);
+	target_cell_y = (int)(target_y / TILE_SIZE);
+	if (!can_move_to(target_cell_x, target_cell_y, gd))
 	{
-        player->moving = false;
-        return ;
-    }
+		player->moving = false;
+		return ;
+	}
 	if (fabsf(dist_x) < 1 && fabsf(dist_y) < 1)
 	{
 		player->xy_p.x = target_x;
@@ -362,7 +361,7 @@ void	ft_move(t_player *player, t_gamedata *gd)
 		ft_printf("Move count: %d\n", player->move_count);
 	}
 	else
-	{	
+	{
 		if (fabsf(dist_x) > fabsf(dist_y))
 		{
 			if (dist_x > 0)
@@ -386,7 +385,7 @@ void	ft_render(void *param)
 
 	gd = (t_gamedata *)param;
 	ft_move(gd->player, gd);
-	ft_draw(param);   
+	ft_draw(param);
 	ft_draw_coll(param);
 	ft_draw_map(param);
 }
@@ -409,7 +408,7 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 	}
 	if (keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W)
 	{
-		if (!player->moving) 
+		if (!player->moving)
 		{
 			player->dest_p.y -= 1;
 			player->moving = true;
@@ -446,7 +445,6 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 	if (frame_offset >= 0)
 	{
 		player->current_frame = (player->current_frame + 1) % 4 + frame_offset;
-
 		collect_pickup(gd);
 	}
 }
