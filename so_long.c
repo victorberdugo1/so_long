@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/07 21:24:24 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/08 20:48:58 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	main(int argc, char **argv)
 		return (ft_printf("Error\nmap_file.ber missing\n"), EXIT_FAILURE);
 	gamedata.map = read_map(argv[1]);
 	if (!gamedata.map)
-		return (ft_printf("Error\nInvalid map\n"), EXIT_FAILURE);
+		return (ft_printf("Invalid map\n"), EXIT_FAILURE);
 	mlx_set_setting(MLX_MAXIMIZED, true);
 	mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	if (!mlx)

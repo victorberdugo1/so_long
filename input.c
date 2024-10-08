@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/08 15:36:51 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:58:08 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,7 +322,9 @@ bool	can_move_to(int x, int y, t_gamedata *gd)
 		return (false);
 	if (gd->map->grid[y][x] == 'E' && gd->map->collect_flag)
 	{
-		ft_printf("¡Has ganado el juego!\n");
+		gd->player->move_count += 1;
+		ft_printf("Move count: %d\n", gd->player->move_count);
+		ft_printf("Success! You've escaped!");
 		mlx_close_window(gd->mlx);
 		return (false);
 	}

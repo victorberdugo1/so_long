@@ -6,71 +6,62 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/08 13:36:19 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:33:06 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-bool	validate_map(t_map *map)
+bool	validate(t_map *map, int x, int y, int *cnt)
 {
-	int		collectible_count;
-	int		exit_count;
-	int		player_count;
-	int		y;
-	int		x;
-	char	cell;
+	const char	*valid_chars = "01CE\nP";
+	char		ch;
 
-	collectible_count = 0;
-	exit_count = 0;
-	player_count = 0;
-	y = 0;
-	while (y < map->hgt)
+	ch = map->grid[y][x];
+	if (!ft_strchr(valid_chars, ch))
 	{
-		x = 0;
-		while (x < map->wdt)
-		{
-			cell = map->grid[y][x];
-			if (cell != '0' && cell != '1' && cell != 'C' && cell != 'E' && cell != 'P' && cell != '\n')
-			{
-				printf("Error\nInvalid character '%c' in the map at (%d, %d).\n", cell, y, x);
-				return (false);
-			}
-			if (cell == 'C')
-				collectible_count++;
-			else if (cell == 'E')
-				exit_count++;
-			else if (cell == 'P')
-			{
-				player_count++;
-				map->player_pos.x = x;
-				map->player_pos.y = y;
-			}
-			x++;
-		}
-		if ((size_t)ft_strlen(map->grid[y]) != (size_t)map->wdt)
-		{
-			printf("Error\nThe map is not rectangular.\n");
-			return (false);
-		}
-		y++;
-	}
-	if (collectible_count < 1)
-	{
-		printf("Error\nThe map must contain at least one collectible.\n");
+		ft_printf("Error\nInvalid character '%c' in the map.\n", ch);
 		return (false);
 	}
-	if (exit_count < 1)
+	if (ch == 'C')
+		(*cnt)++;
+	else if (ch == 'E')
+		map->exit_count++;
+	else if (ch == 'P')
 	{
-		printf("Error\nThe map must contain at least one exit.\n");
-		return (false);
-	}
-	if (player_count != 1)
-	{
-		printf("Error\nThe map must contain exactly one player position.\n");
-		return (false);
+		map->player_count++;
+		map->player_pos.x = x;
+		map->player_pos.y = y;
 	}
 	return (true);
+}
+
+bool	validate_map(t_map *map)
+{
+	int	y;
+	int	x;
+	int	cnt;
+
+	cnt = 0;
+	y = -1;
+	while (++y < map->hgt)
+	{
+		x = -1;
+		while (++x < map->wdt)
+			if (!validate(map, x, y, &cnt))
+				return (false);
+		if ((size_t)ft_strlen(map->grid[y]) != (size_t)map->wdt)
+			return (ft_printf("Error\nThe map is not rectangular.\n"), false);
+	}
+	if (cnt < 1)
+		ft_printf("Error\nThe map must contain at least one collectible.\n");
+	else if (map->exit_count < 1)
+		ft_printf("Error\nThe map must contain at least one exit.\n");
+	else if (map->player_count != 1)
+		ft_printf("Error\nThe map must contain exactly one player position.\n");
+	else
+		return (true);
+	return (false);
 }
 
 t_map	*read_map(const char *filename)
