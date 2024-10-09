@@ -6,13 +6,13 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 07:50:05 by victor            #+#    #+#             */
-/*   Updated: 2024/10/04 10:24:28 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/09 16:23:21 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	free_player(t_player *player, t_gamedata *gd)
+void	free_player(t_player *player, t_gdata *gd)
 {
 	int	i;
 
@@ -40,7 +40,7 @@ void	free_player(t_player *player, t_gamedata *gd)
 	}
 }
 
-void	free_collects(t_collect *collects, int coin_count, t_gamedata *gd)
+void	free_collects(t_collect *collects, int coin_count, t_gdata *gd)
 {
 	int	i;
 
@@ -68,7 +68,7 @@ void	free_collects(t_collect *collects, int coin_count, t_gamedata *gd)
 	collects = NULL;
 }
 
-void	free_map(t_map *map, t_gamedata *gd)
+void	free_map(t_map *map, t_gdata *gd)
 {
 	int	i;
 
@@ -97,7 +97,7 @@ void	free_map(t_map *map, t_gamedata *gd)
 		free_collects(map->collects, gd->coins, gd);
 }
 
-void	free_resources(t_gamedata *gamedata)
+void	free_resources(t_gdata *gamedata)
 {
 	if (gamedata->player)
 	{

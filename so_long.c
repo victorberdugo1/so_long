@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/08 20:48:58 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/09 17:06:40 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,77 +17,11 @@
 #include <string.h>
 #include "so_long.h"
 
-int	count_collectables(t_map *map)
-{
-	int	x;
-	int	y;
-	int	count;
-
-	count = 0;
-	y = 0;
-	while (y < map->hgt)
-	{
-		x = 0;
-		while (x < map->wdt)
-		{
-			if (map->grid[y][x] == 'C')
-				count++;
-			x++;
-		}
-		y++;
-	}
-	return (count);
-}
-
-void	init_collectables(t_gamedata *gd)
-{
-	int	x;
-	int	y;
-	int	idx;
-
-	idx = 0;
-	y = 0;
-	gd->map->collectible_pos = malloc(gd->coins * sizeof(t_coord));
-	if (!gd->map->collectible_pos)
-		exit(EXIT_FAILURE);
-	while (y < gd->map->hgt)
-	{
-		x = 0;
-		while (x < gd->map->wdt)
-		{
-			if (gd->map->grid[y][x] == 'C')
-			{
-				collect_init(&gd->map->collects[idx], x, y, gd->mlx);
-				gd->map->collectible_pos[idx].x = x;
-				gd->map->collectible_pos[idx].y = y;
-				idx++;
-			}
-			x++;
-		}
-		y++;
-	}
-}
-
-int	init_collectables_from_map(t_gamedata *gamedata)
-{
-	gamedata->player->xy_p.x = gamedata->map->player_pos.x * TILE_SIZE + 32;
-	gamedata->player->xy_p.y = gamedata->map->player_pos.y * TILE_SIZE + 32;
-	gamedata->coins = count_collectables(gamedata->map);
-	gamedata->map->collects = malloc(sizeof(t_collect) * gamedata->coins);
-	if (!gamedata->map->collects)
-	{
-		ft_printf("Error\nFailed to allocate memory for collectables\n");
-		return (0);
-	}
-	init_collectables(gamedata);
-	return (1);
-}
-
 int	main(int argc, char **argv)
 {
 	mlx_t		*mlx;
 	t_player	player;
-	t_gamedata	gamedata;
+	t_gdata		gamedata;
 
 	if (argc != 2)
 		return (ft_printf("Error\nmap_file.ber missing\n"), EXIT_FAILURE);

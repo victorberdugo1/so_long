@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/08 13:43:05 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:13:56 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,11 @@ typedef struct s_gamedata
 	t_map		*map;
 	int32_t		window_width;
 	int32_t		window_height;
-}	t_gamedata;
+}	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
 void		ft_hook(mlx_key_data_t keydata, void *param);
-void		free_resources(t_gamedata *gamedata);
+void		free_resources(t_gdata *gamedata);
 void		resize_hook(int32_t width, int32_t height, void *param);
 uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
 t_map		*init_map(int width, int height);
@@ -121,6 +121,13 @@ void		ft_render(void *param);
 void		combine_tiles(t_map *map);
 int			count_collectables(t_map *map);
 void		process_door_tile(t_map *map, mlx_t *mlx, int i, int j);
-void		free_collects(t_collect *collects, int coin_count, t_gamedata *gd);
-
+void		free_collects(t_collect *collects, int coin_count, t_gdata *gd);
+int			init_collectables_from_map(t_gdata *gamedata);
+bool		validate_map(t_map *map);
+void		ft_move(t_player *player, t_gdata *gd);
+bool		can_move_to(int x, int y, t_gdata *gd);
+void		update_frame(t_player *player);
+void		scale_image(t_player *player, float scl, t_coord pos, t_gdata *gd);
+void		scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h);
+void		update_frame(t_player *player);
 #endif 

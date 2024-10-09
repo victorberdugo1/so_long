@@ -6,11 +6,16 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 21:53:43 by victor            #+#    #+#             */
-/*   Updated: 2024/09/27 23:25:13 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/09 17:11:58 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
+{
+	return ((r << 24) | (g << 16) | (b << 8) | a);
+}
 
 uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width)
 {
@@ -44,4 +49,27 @@ uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y)
 	index = (y * texture->width + x) * 4;
 	pixel = &texture->pixels[index];
 	return (ft_pixel(pixel[0], pixel[1], pixel[2], pixel[3]));
+}
+
+void	scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h)
+{
+	int32_t		x;
+	int32_t		y;
+	uint32_t	src_x;
+	uint32_t	src_y;
+	uint32_t	pixel;
+
+	y = -1;
+	while (++y < h)
+	{
+		x = -1;
+		while (++x < w)
+		{
+			src_x = (x * src->width) / w;
+			src_y = (y * src->height) / h;
+			pixel = get_pixel(src->pixels, src_x, src_y, src->width);
+			pixel = convert_pixel(pixel);
+			mlx_put_pixel(img, x, y, pixel);
+		}
+	}
 }

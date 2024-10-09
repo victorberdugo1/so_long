@@ -6,15 +6,76 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:31:26 by victor            #+#    #+#             */
-/*   Updated: 2024/10/07 17:14:40 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:23:20 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
+int	count_collectables(t_map *map)
 {
-	return ((r << 24) | (g << 16) | (b << 8) | a);
+	int	x;
+	int	y;
+	int	count;
+
+	count = 0;
+	y = 0;
+	while (y < map->hgt)
+	{
+		x = 0;
+		while (x < map->wdt)
+		{
+			if (map->grid[y][x] == 'C')
+				count++;
+			x++;
+		}
+		y++;
+	}
+	return (count);
+}
+
+void	init_collectables(t_gdata *gd)
+{
+	int	x;
+	int	y;
+	int	idx;
+
+	idx = 0;
+	y = 0;
+	gd->map->collectible_pos = malloc(gd->coins * sizeof(t_coord));
+	if (!gd->map->collectible_pos)
+		exit(EXIT_FAILURE);
+	while (y < gd->map->hgt)
+	{
+		x = 0;
+		while (x < gd->map->wdt)
+		{
+			if (gd->map->grid[y][x] == 'C')
+			{
+				collect_init(&gd->map->collects[idx], x, y, gd->mlx);
+				gd->map->collectible_pos[idx].x = x;
+				gd->map->collectible_pos[idx].y = y;
+				idx++;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+int	init_collectables_from_map(t_gdata *gamedata)
+{
+	gamedata->player->xy_p.x = gamedata->map->player_pos.x * TILE_SIZE + 32;
+	gamedata->player->xy_p.y = gamedata->map->player_pos.y * TILE_SIZE + 32;
+	gamedata->coins = count_collectables(gamedata->map);
+	gamedata->map->collects = malloc(sizeof(t_collect) * gamedata->coins);
+	if (!gamedata->map->collects)
+	{
+		ft_printf("Error\nFailed to allocate memory for collectables\n");
+		return (0);
+	}
+	init_collectables(gamedata);
+	return (1);
 }
 
 void	copy_text_c(mlx_image_t *image, mlx_texture_t *texture)
