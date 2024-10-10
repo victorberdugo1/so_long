@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 13:44:01 by victor            #+#    #+#             */
-/*   Updated: 2024/10/10 13:53:42 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/10 23:00:23 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 		return ;
 	gd->window_width = width;
 	gd->window_height = height;
-	bgclean(gd->mlx, width, height);
+	bgclean(gd, width, height);
 	x = (float)width / (float)gd->map->full_m->width;
 	y = (float)height / (float)gd->map->full_m->height;
 	gd->map->scale = fmaxf(x, y);

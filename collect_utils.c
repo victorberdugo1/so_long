@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 10:57:47 by victor            #+#    #+#             */
-/*   Updated: 2024/10/10 12:25:01 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/10 17:26:53 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	collect_pickup(t_gdata *gd)
 	int			pickup_range;
 	t_collect	*coin;
 
-	pickup_range = 64;
+	pickup_range = 1;
 	idx = -1;
 	while (++idx < gd->coins)
 	{

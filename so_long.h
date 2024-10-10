@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/10 13:49:14 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/10 21:36:49 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ typedef struct s_gamedata
 	t_map		*map;
 	int32_t		window_width;
 	int32_t		window_height;
+	mlx_image_t	*bg_image;
+	mlx_image_t	*cover;
 }	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
@@ -113,7 +115,7 @@ t_map		*fill_map(const char *filename, int width, t_map *map);
 void		collect_init(t_collect *coll, int x, int y, mlx_t *mlx);
 void		map_start(t_map *map, mlx_t *mlx);
 void		sclmap(mlx_image_t **im, mlx_image_t **siz, float scl, t_gdata *gd);
-void		bgclean(mlx_t *mlx, int32_t width, int32_t height);
+void		bgclean(t_gdata *gd, int32_t width, int32_t height);
 int			all_collected(t_map *map);
 uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width);
 t_coord		get_border_sprite(t_map *map, int coord_y, int coord_x);

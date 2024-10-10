@@ -6,34 +6,34 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/10 13:52:48 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/10 21:24:44 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	bgclean(mlx_t *mlx, int32_t width, int32_t height)
+void	bgclean(t_gdata *gd, int32_t width, int32_t height)
 {
-	mlx_image_t	*bg_image;
+	uint32_t	color;
 	int32_t		j;
 	int32_t		i;
-	uint32_t	color;
 
-	bg_image = NULL;
 	color = ft_pixel(0, 122, 51, 255);
-	if (bg_image != NULL)
-		mlx_delete_image(mlx, bg_image);
-	bg_image = mlx_new_image(mlx, width, height);
-	if (!bg_image)
+	if (gd->bg_image != NULL)
+		mlx_delete_image(gd->mlx, gd->bg_image);
+	gd->bg_image = mlx_new_image(gd->mlx, width, height);
+	if (!gd->bg_image)
 		return ;
 	j = -1;
 	while (++j < height)
 	{
 		i = -1;
 		while (++i < width)
-			mlx_put_pixel(bg_image, i, j, color);
+		{
+			mlx_put_pixel(gd->bg_image, i, j, color);
+		}
 	}
-	mlx_image_to_window(mlx, bg_image, 0, 0);
+	mlx_image_to_window(gd->mlx, gd->bg_image, 0, 0);
 }
 
 t_coord	get_border_sprite(t_map *map, int coord_y, int coord_x)
