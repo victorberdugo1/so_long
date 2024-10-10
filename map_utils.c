@@ -6,11 +6,55 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 21:56:07 by victor            #+#    #+#             */
-/*   Updated: 2024/10/07 12:55:04 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:52:30 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	scl_m(mlx_image_t *im, mlx_image_t **siz, t_dim n_size, t_gdata *gd)
+{
+	int32_t		x;
+	int32_t		y;
+	uint32_t	src_x;
+	uint32_t	src_y;
+	uint32_t	pixel;
+
+	*siz = mlx_new_image(gd->mlx, n_size.width, n_size.height);
+	if (!*siz)
+		return ;
+	y = -1;
+	while (++y < (int32_t)n_size.height)
+	{
+		x = -1;
+		while (++x < (int32_t)n_size.width)
+		{
+			src_x = (x * im->width) / n_size.width;
+			src_y = (y * im->height) / n_size.height;
+			pixel = get_pixel(im->pixels, src_x, src_y, im->width);
+			pixel = convert_pixel(pixel);
+			mlx_put_pixel(*siz, x, y, pixel);
+		}
+	}
+}
+
+void	sclmap(mlx_image_t **im, mlx_image_t **siz, float scl, t_gdata *gd)
+{
+	t_dim	new_size;
+	int		map_x_offset;
+	int		map_y_offset;
+
+	if (!im || !*im || scl <= 0)
+		return ;
+	map_x_offset = (gd->window_width / 2) - (
+			(gd->player->xy_p.x) + (gd->player->scale * TILE_SIZE) / 2);
+	map_y_offset = (gd->window_height / 2) - (
+			(gd->player->xy_p.y) + (gd->player->scale * TILE_SIZE) / 2);
+	new_size.width = (uint32_t)((*im)->width * scl);
+	new_size.height = (uint32_t)((*im)->height * scl);
+	scl_m(*im, siz, new_size, gd);
+	mlx_image_to_window(gd->mlx, gd->map->resize_m, map_x_offset, map_y_offset);
+}
 
 void	pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy)
 {
@@ -80,54 +124,4 @@ int	all_collected(t_map *m)
 		return (1);
 	else
 		return (0);
-}
-
-t_coord	get_border_sprite(t_map *map, int coord_y, int coord_x)
-{
-	if (coord_y == 0)
-	{
-		if (coord_x == 0)
-			return ((t_coord){0, 0});
-		else if (coord_x == map->wdt - 1)
-			return ((t_coord){2, 0});
-		else
-			return ((t_coord){1, 0});
-	}
-	else if (coord_y == map->hgt - 1)
-	{
-		if (coord_x == 0)
-			return ((t_coord){3, 0});
-		else if (coord_x == map->wdt - 1)
-			return ((t_coord){1, 1});
-		else
-			return ((t_coord){0, 1});
-	}
-	if (coord_x == 0)
-		return ((t_coord){2, 1});
-	return ((t_coord){3, 1});
-}
-
-t_coord	get_inner_sprite(t_map *mp, int y, int x)
-{
-	if (mp->grid[y][x] == '0' || mp->grid[y][x] == 'P' || mp->grid[y][x] == 'C')
-	{
-		if ((rand() % 3) == 0)
-			return ((t_coord){0, 2});
-		else if ((rand() % 3) == 1)
-			return ((t_coord){1, 2});
-		return ((t_coord){2, 2});
-	}
-	else if (mp->grid[y][x] == '1')
-	{
-		if ((rand() % 3) == 0)
-			return ((t_coord){3, 2});
-		else if ((rand() % 3) == 1)
-			return ((t_coord){0, 3});
-		return ((t_coord){1, 3});
-	}
-	else if (mp->grid[y][x] == 'E')
-	{
-		return ((t_coord){2, 3});
-	}
-	return ((t_coord){-1, -1});
 }

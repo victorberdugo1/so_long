@@ -6,11 +6,85 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/09 15:05:58 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:52:48 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	bgclean(mlx_t *mlx, int32_t width, int32_t height)
+{
+	mlx_image_t	*bg_image;
+	int32_t		j;
+	int32_t		i;
+	uint32_t	color;
+
+	bg_image = NULL;
+	color = ft_pixel(0, 122, 51, 255);
+	if (bg_image != NULL)
+		mlx_delete_image(mlx, bg_image);
+	bg_image = mlx_new_image(mlx, width, height);
+	if (!bg_image)
+		return ;
+	j = -1;
+	while (++j < height)
+	{
+		i = -1;
+		while (++i < width)
+			mlx_put_pixel(bg_image, i, j, color);
+	}
+	mlx_image_to_window(mlx, bg_image, 0, 0);
+}
+
+t_coord	get_border_sprite(t_map *map, int coord_y, int coord_x)
+{
+	if (coord_y == 0)
+	{
+		if (coord_x == 0)
+			return ((t_coord){0, 0});
+		else if (coord_x == map->wdt - 1)
+			return ((t_coord){2, 0});
+		else
+			return ((t_coord){1, 0});
+	}
+	else if (coord_y == map->hgt - 1)
+	{
+		if (coord_x == 0)
+			return ((t_coord){3, 0});
+		else if (coord_x == map->wdt - 1)
+			return ((t_coord){1, 1});
+		else
+			return ((t_coord){0, 1});
+	}
+	if (coord_x == 0)
+		return ((t_coord){2, 1});
+	return ((t_coord){3, 1});
+}
+
+t_coord	get_inner_sprite(t_map *mp, int y, int x)
+{
+	if (mp->grid[y][x] == '0' || mp->grid[y][x] == 'P' || mp->grid[y][x] == 'C')
+	{
+		if ((rand() % 3) == 0)
+			return ((t_coord){0, 2});
+		else if ((rand() % 3) == 1)
+			return ((t_coord){1, 2});
+		return ((t_coord){2, 2});
+	}
+	else if (mp->grid[y][x] == '1')
+	{
+		if ((rand() % 3) == 0)
+			return ((t_coord){3, 2});
+		else if ((rand() % 3) == 1)
+			return ((t_coord){0, 3});
+		return ((t_coord){1, 3});
+	}
+	else if (mp->grid[y][x] == 'E')
+	{
+		return ((t_coord){2, 3});
+	}
+	return ((t_coord){-1, -1});
+}
 
 bool	validate(t_map *map, int x, int y, int *cnt)
 {

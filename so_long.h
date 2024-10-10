@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/09 17:13:56 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:49:14 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ typedef struct s_coord
 	int	x;
 	int	y;
 }	t_coord;
+
+typedef struct s_dim
+{
+	uint32_t	width;
+	uint32_t	height;
+}	t_dim;
 
 typedef struct s_player
 {
@@ -105,7 +111,9 @@ t_map		*read_map(const char *filename);
 int			map_size(const char *filename, int *width, int *height);
 t_map		*fill_map(const char *filename, int width, t_map *map);
 void		collect_init(t_collect *coll, int x, int y, mlx_t *mlx);
-void		draw_map(t_map *map, mlx_t *mlx);
+void		map_start(t_map *map, mlx_t *mlx);
+void		sclmap(mlx_image_t **im, mlx_image_t **siz, float scl, t_gdata *gd);
+void		bgclean(mlx_t *mlx, int32_t width, int32_t height);
 int			all_collected(t_map *map);
 uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width);
 t_coord		get_border_sprite(t_map *map, int coord_y, int coord_x);
@@ -130,4 +138,8 @@ void		update_frame(t_player *player);
 void		scale_image(t_player *player, float scl, t_coord pos, t_gdata *gd);
 void		scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h);
 void		update_frame(t_player *player);
+void		scale_image_coins(t_gdata *gd);
+void		collect_pickup(t_gdata *gd);
+void		ft_draw_collectable(void *param);
+void		redraw_map(t_map *map, mlx_t *mlx);
 #endif 

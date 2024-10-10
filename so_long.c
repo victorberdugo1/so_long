@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/09 17:06:40 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:03:35 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	main(int argc, char **argv)
 	mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	if (!mlx)
 		return (EXIT_FAILURE);
-	draw_map(gamedata.map, mlx);
+	map_start(gamedata.map, mlx);
 	player_init(&player, mlx);
 	gamedata.mlx = mlx;
 	gamedata.player = &player;

@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 15:55:39 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/08 20:34:49 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/10 12:25:55 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	combine_tiles(t_map *map)
 	}
 }
 
-void	draw_map(t_map *map, mlx_t *mlx)
+void	map_start(t_map *map, mlx_t *mlx)
 {
 	int	i;
 	int	j;

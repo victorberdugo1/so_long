@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/09 15:06:16 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:55:38 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ t_map	*read_map(const char *filename)
 		return (NULL);
 	map = init_map(width, height);
 	if (!map)
-		return (NULL);
-	if (map_size(filename, &width, &height) < 0)
 		return (NULL);
 	map = fill_map(filename, width, map);
 	if (!validate_map(map))
@@ -41,7 +39,7 @@ int	map_size(const char *filename, int *width, int *height)
 	*height = 0;
 	file = open(filename, O_RDONLY);
 	if (file < 0)
-		return (-1);
+		return (perror("Error opening the file"), -1);
 	line = get_next_line(file);
 	while (line != NULL)
 	{
@@ -67,7 +65,7 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 
 	file = open(filename, O_RDONLY);
 	if (file < 0)
-		return (free(map), NULL);
+		return (perror("Error opening the file"), free(map), NULL);
 	h = 0;
 	line = get_next_line(file);
 	while (line != NULL)
