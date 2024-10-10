@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/10 23:49:46 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/11 00:58:49 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,10 @@ void draw_game_info(void *param)
     char *move_count_str;
    	move_count_str = ft_itoa(game->player->move_count);
 
-	mlx_put_string(game->mlx, move_count_str, 96, 10);
+	//game->cover =  mlx_put_string(game->mlx, move_count_str, 96, 10);
 	//mlx_image_to_window(game->mlx, game->cover, 0, 10);
+	mlx_image_to_window(game->mlx, mlx_put_string(game->mlx, move_count_str, 96, 10), 0, 10);
+
 	free(move_count_str);
 }
 
@@ -121,16 +123,17 @@ int	main(int argc, char **argv)
 
 	mlx_loop_hook(gamedata.mlx, move, &gamedata);
 	
-	//mlx_loop_hook(gamedata.mlx, borrar, &gamedata);
+
 
 	mlx_loop_hook(gamedata.mlx, ft_draw, &gamedata);
 
-	mlx_loop_hook(gamedata.mlx, draw_game_info, &gamedata);
 
 	
 	mlx_loop_hook(gamedata.mlx, ft_draw_collectable, &gamedata);
 	mlx_loop_hook(gamedata.mlx, ft_draw_map, &gamedata);
 
+	mlx_loop_hook(gamedata.mlx, borrar, &gamedata);
+	mlx_loop_hook(gamedata.mlx, draw_game_info, &gamedata);
 	mlx_loop(mlx);
 	return (free_resources(&gamedata), mlx_terminate(mlx), EXIT_SUCCESS);
 }
