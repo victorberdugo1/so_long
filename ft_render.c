@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:29:25 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/11 00:58:55 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/11 15:13:31 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	ft_move(t_player *player, t_gdata *gd)
 	target_y = (player->dest_p.y * TILE_SIZE) + 32;
 	update_pos(player, target_x, target_y, gd);
 	mlx_delete_image(gd->mlx, gd->cover);
+	mlx_delete_image(gd->mlx, gd->nbr);
+	//mlx_delete_image(gd->mlx, gd->msg);
 }
 
 void	ft_render(void *param)

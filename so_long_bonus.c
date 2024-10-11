@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/11 00:58:49 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/11 15:10:41 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void borrar(void *param)
  t_gdata *game = (t_gdata *)param;
 
 //mlx_delete_image(game->mlx, game->cover);
-	int32_t width = 200;
+	int32_t width = 50;
     int32_t height = 20;
     uint32_t color = ft_pixel(0, 122, 51, 255);
 
@@ -63,7 +63,7 @@ void borrar(void *param)
             mlx_put_pixel(game->cover, i, j, color);
         }
     }
-    mlx_image_to_window(game->mlx, game->cover, 0, 10);
+    //mlx_image_to_window(game->mlx, game->cover, 150, 10);
 
 }
 void draw_game_info(void *param)
@@ -72,9 +72,12 @@ void draw_game_info(void *param)
     char *move_count_str;
    	move_count_str = ft_itoa(game->player->move_count);
 
-	//game->cover =  mlx_put_string(game->mlx, move_count_str, 96, 10);
-	//mlx_image_to_window(game->mlx, game->cover, 0, 10);
-	mlx_image_to_window(game->mlx, mlx_put_string(game->mlx, move_count_str, 96, 10), 0, 10);
+ 	//mlx_put_string(game->mlx, "Move count:", 2, 10);
+	//game->msg = mlx_put_string(game->mlx, "Move count:", 2, 10);
+	mlx_image_to_window(game->mlx, game->msg , 2, 10);
+	
+	game->nbr =  mlx_put_string(game->mlx, move_count_str,150, 10);
+	mlx_image_to_window(game->mlx, game->nbr , 150, 10);
 
 	free(move_count_str);
 }
@@ -84,9 +87,7 @@ void move(void *param)
 	t_gdata *game = (t_gdata *)param;
 
 	ft_move(game->player, game);
-
 }
-
 
 int	main(int argc, char **argv)
 {
@@ -108,6 +109,9 @@ int	main(int argc, char **argv)
 	gamedata.mlx = mlx;
 	gamedata.player = &player;
 	gamedata.cover = NULL;
+	gamedata.msg = mlx_put_string(mlx, "Move count:", 2, 10);
+	//mlx_image_to_window(mlx, gamedata.msg , 2, 10);
+
 	if (!init_collectables_from_map(&gamedata))
 		return (EXIT_FAILURE);
 	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
@@ -119,10 +123,7 @@ int	main(int argc, char **argv)
 	//ft_move(&player, &gamedata);a
 
 
-
-
 	mlx_loop_hook(gamedata.mlx, move, &gamedata);
-	
 
 
 	mlx_loop_hook(gamedata.mlx, ft_draw, &gamedata);
@@ -134,6 +135,8 @@ int	main(int argc, char **argv)
 
 	mlx_loop_hook(gamedata.mlx, borrar, &gamedata);
 	mlx_loop_hook(gamedata.mlx, draw_game_info, &gamedata);
+
+
 	mlx_loop(mlx);
 	return (free_resources(&gamedata), mlx_terminate(mlx), EXIT_SUCCESS);
 }

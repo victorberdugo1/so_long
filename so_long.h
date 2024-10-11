@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/11 00:12:40 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/11 12:42:57 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ typedef struct s_gamedata
 	int32_t		window_height;
 	mlx_image_t	*bg_image;
 	mlx_image_t	*cover;
+	mlx_image_t	*nbr;
+	mlx_image_t	*msg;
 }	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
