@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/11 15:10:41 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/12 19:14:13 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,76 +17,43 @@
 #include <string.h>
 #include "so_long.h"
 
-/*
-void	put_text_move(t_map *map)
-{
-	char	*move;
+mlx_texture_t *cover_texture;
+mlx_image_t *cover_image;
 
-	move = ft_itoa(map->move);
-	if (map->image.text_move == NULL)
-	{
-		map->image.text_title = mlx_put_string(map->mlx, "Steps:", 32, 32);
-		map->image.text_move = mlx_put_string(map->mlx, move, 96, 32);
-		free(move);
-		return ;
-	}
-	if (map->image.text_info != NULL && map->p_state == 1)
-	{
-		mlx_delete_image(map->mlx, map->image.text_info);
-		map->info = NULL;
-	}
-	mlx_delete_image(map->mlx, map->image.text_move);
-	map->image.text_move = mlx_put_string(map->mlx, move, 96, 32);
-	free(move);
-}
-*/
-
-void borrar(void *param)
-{
- t_gdata *game = (t_gdata *)param;
-
-//mlx_delete_image(game->mlx, game->cover);
-	int32_t width = 50;
-    int32_t height = 20;
-    uint32_t color = ft_pixel(0, 122, 51, 255);
-
-	if (game->cover != NULL)
-	{
-		//mlx_delete_image(game->mlx, game->cover);
-	}
-	game->cover = mlx_new_image(game->mlx, width, height);
-
-    for (int32_t j = 0; j < height; j++)
-    {
-        for (int32_t i = 0; i < width; i++)
-        {
-            mlx_put_pixel(game->cover, i, j, color);
-        }
-    }
-    //mlx_image_to_window(game->mlx, game->cover, 150, 10);
-
-}
-void draw_game_info(void *param)
+void draw_game_move(void *param)
 {
     t_gdata *game = (t_gdata *)param;
-    char *move_count_str;
-   	move_count_str = ft_itoa(game->player->move_count);
+	static int cycle_count = 0;
 
- 	//mlx_put_string(game->mlx, "Move count:", 2, 10);
-	//game->msg = mlx_put_string(game->mlx, "Move count:", 2, 10);
-	mlx_image_to_window(game->mlx, game->msg , 2, 10);
-	
-	game->nbr =  mlx_put_string(game->mlx, move_count_str,150, 10);
-	mlx_image_to_window(game->mlx, game->nbr , 150, 10);
-
-	free(move_count_str);
+    if (game->is_msg)
+		return;
+    cycle_count++;
+	if (cycle_count >= 2)
+	{
+		mlx_put_string(game->mlx, "Move count:", 20, 10);
+		cover_image = mlx_texture_to_image(game->mlx, cover_texture);
+		mlx_image_to_window(game->mlx, cover_image, 150, 10);
+		game->is_msg = true;
+		cycle_count = 0;
+	}
 }
 
-void move(void *param)
+void draw_game_info(void *param)
 {
+	static int cycle_count = 0;
 	t_gdata *game = (t_gdata *)param;
+	char *move_count_str;
 
-	ft_move(game->player, game);
+	move_count_str = ft_itoa(game->player->move_count);
+	cycle_count++;
+	if (cycle_count >= 2)
+	{
+		if (game->nbr != NULL)
+			mlx_delete_image(game->mlx, game->nbr);
+		game->nbr = mlx_put_string(game->mlx, move_count_str, 150, 10);
+		cycle_count = 0;
+	}
+	free(move_count_str);
 }
 
 int	main(int argc, char **argv)
@@ -109,34 +76,31 @@ int	main(int argc, char **argv)
 	gamedata.mlx = mlx;
 	gamedata.player = &player;
 	gamedata.cover = NULL;
-	gamedata.msg = mlx_put_string(mlx, "Move count:", 2, 10);
-	//mlx_image_to_window(mlx, gamedata.msg , 2, 10);
-
 	if (!init_collectables_from_map(&gamedata))
 		return (EXIT_FAILURE);
-	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
 	mlx_key_hook(gamedata.mlx, ft_hook, &gamedata);
-
-	//mlx_loop_hook(gamedata.mlx, borrar, &gamedata);
-
-	//mlx_loop_hook(gamedata.mlx, ft_render, &gamedata);
-	//ft_move(&player, &gamedata);a
-
-
-	mlx_loop_hook(gamedata.mlx, move, &gamedata);
-
-
-	mlx_loop_hook(gamedata.mlx, ft_draw, &gamedata);
-
-
+    cover_texture = mlx_load_png("./textures/cover.png");
+    if (!cover_texture)
+    {
+        mlx_close_window(mlx);
+        return 0; 
+    }
+    cover_image = mlx_texture_to_image(mlx, cover_texture);
+    if (!cover_image)
+    {
+        mlx_delete_texture(cover_texture);
+        mlx_close_window(mlx);
+        return 0;
+    }
 	
-	mlx_loop_hook(gamedata.mlx, ft_draw_collectable, &gamedata);
-	mlx_loop_hook(gamedata.mlx, ft_draw_map, &gamedata);
+	mlx_resize_hook(gamedata.mlx, resize_hook, &gamedata);
 
-	mlx_loop_hook(gamedata.mlx, borrar, &gamedata);
+	mlx_loop_hook(gamedata.mlx, ft_render, &gamedata);
+
+	mlx_loop_hook(gamedata.mlx, draw_game_move, &gamedata);
+	
 	mlx_loop_hook(gamedata.mlx, draw_game_info, &gamedata);
-
-
+	
 	mlx_loop(mlx);
 	return (free_resources(&gamedata), mlx_terminate(mlx), EXIT_SUCCESS);
 }

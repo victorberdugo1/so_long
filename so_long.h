@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/11 12:42:57 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/12 18:41:32 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef struct s_gamedata
 	mlx_image_t	*cover;
 	mlx_image_t	*nbr;
 	mlx_image_t	*msg;
+	bool		is_msg;
 }	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
@@ -125,7 +126,6 @@ uint32_t	convert_pixel(uint32_t px);
 void		pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy);
 t_coord		get_inner_sprite(t_map *mp, int y, int x);
 void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
-uint32_t	pixel_texture(mlx_texture_t *texture, uint32_t x, uint32_t y);
 void		ft_draw(void *param);
 void		ft_draw_coll(void *param);
 void		ft_draw_map(void *param);
