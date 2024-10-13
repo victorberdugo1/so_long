@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/10/13 15:03:00 by victor           ###   ########.fr        #
+#    Updated: 2024/10/13 21:34:48 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ INCLUDE = libft/libft.h so_long.h
 
 SRC = input.c collect.c map_read.c player.c map.c pixel_utils.c \
 	  map_utils.c map_validate.c ft_render.c map_path.c \
-	  collect_utils.c input_utils.c free.c free_2.c
+	  collect_utils.c input_utils.c spike.c free.c free_2.c
 
 BONUS_SRC = so_long_bonus.c #free_bonus.c #print_bonus.c
 
@@ -34,7 +34,7 @@ BONUS_OBJ = $(BONUS_SRC:%.c=%.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc -g #-fsanitize=address,undefined -g
+CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc #-fsanitize=address,undefined -g
 
 LDFLAGS = $(LIBFT) $(MINI) -lglfw -lm
 

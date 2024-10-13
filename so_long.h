@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/13 14:32:00 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 21:32:25 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,14 @@ typedef struct s_collect
 	bool			pick;
 }	t_collect;
 
+typedef struct s_spike
+{
+	mlx_image_t		*image_s;
+	mlx_image_t		*resize_s;
+	float			scale_s;
+	t_coord			xy_s;
+}	t_spike;
+
 typedef struct s_map
 {
 	mlx_image_t		*full_m;
@@ -87,6 +95,7 @@ typedef struct s_map
 	t_coord			player_pos;
 	t_coord			*collectible_pos;
 	bool			collect_flag;
+	t_spike			*spikes;
 	bool			valid;
 	bool			closed;
 }	t_map;
@@ -96,6 +105,7 @@ typedef struct s_gamedata
 	mlx_t			*mlx;
 	t_player		*player;
 	int				coins;
+	int				num_spikes;
 	t_map			*map;
 	int32_t			window_width;
 	int32_t			window_height;
@@ -105,6 +115,7 @@ typedef struct s_gamedata
 	mlx_image_t		*nbr;
 	mlx_image_t		*msg;
 	bool			is_msg;
+	mlx_texture_t	*txt_s;
 }	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
@@ -146,7 +157,12 @@ void		scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h);
 void		update_frame(t_player *player);
 void		scale_image_coins(t_gdata *gd);
 void		collect_pickup(t_gdata *gd);
+void		copy_text_c(mlx_image_t *image, mlx_texture_t *texture);
 void		ft_draw_collectable(void *param);
 void		redraw_map(t_map *map, mlx_t *mlx);
 bool		path_valid(t_map *map);
+int			init_spikes(t_gdata *gd, int num_spikes);
+void		check_spike_collision(void *param);
+void		spike_init(t_gdata *gd, int x, int y, mlx_t *mlx);
+void		draw_spikes(void *param);
 #endif 

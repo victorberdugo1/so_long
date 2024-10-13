@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/13 13:01:57 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 21:35:10 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ void	draw_game_move(void *param)
 {
 	t_gdata		*game;
 	static int	cycle_count = 0;
+	int			i;
 
+	i = 0;
 	game = (t_gdata *)param;
 	if (game->is_msg)
 		return ;
@@ -32,6 +34,13 @@ void	draw_game_move(void *param)
 		game->cover = mlx_texture_to_image(game->mlx, game->txt_cover);
 		mlx_image_to_window(game->mlx, game->cover, 150, 10);
 		game->is_msg = true;
+		while (i <= game->num_spikes)
+		{
+			t_spike *spike = game->map->spikes;
+			mlx_image_to_window(game->mlx, spike->image_s, 
+					spike->xy_s.x, spike->xy_s.y);
+			i++;
+		}
 		cycle_count = 0;
 	}
 }
@@ -74,6 +83,9 @@ int	init_game(int argc, char **argv, t_gdata *gamedata, t_player *player)
 	gamedata->player = player;
 	if (!init_collectables_from_map(gamedata))
 		return (EXIT_FAILURE);
+	gamedata->txt_s = mlx_load_png("./textures/spike.png");
+	if (!init_spikes(gamedata, 3))
+		return (EXIT_FAILURE);
 	gamedata->txt_cover = mlx_load_png("./textures/cover.png");
 	if (!gamedata->txt_cover)
 		return (mlx_close_window(mlx), EXIT_FAILURE);
@@ -85,6 +97,8 @@ int	game_loop(t_gdata *gamedata)
 	mlx_key_hook(gamedata->mlx, ft_hook, gamedata);
 	mlx_resize_hook(gamedata->mlx, resize_hook, gamedata);
 	mlx_loop_hook(gamedata->mlx, ft_render, gamedata);
+	//mlx_loop_hook(gamedata->mlx, draw_spikes, gamedata);
+	//mlx_loop_hook(gamedata->mlx, check_spike_collision, gamedata);
 	mlx_loop_hook(gamedata->mlx, draw_game_move, gamedata);
 	mlx_loop_hook(gamedata->mlx, draw_game_info, gamedata);
 	mlx_loop(gamedata->mlx);
