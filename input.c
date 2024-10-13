@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/10 16:52:07 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:21:54 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,63 +85,3 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 	update_player_frame(player, frame_offset);
 	collect_pickup(gd);
 }
-
-/*
-   void	ft_hook(mlx_key_data_t keydata, void *param)
-   {
-   t_gdata		*gd;
-   t_player	*player;
-   int			frame_offset;
-
-   gd = (t_gdata *)param;
-   player = gd->player;
-   if (mlx_is_key_down(gd->mlx, MLX_KEY_ESCAPE))
-   mlx_close_window(gd->mlx);
-   frame_offset = -1;
-   if (!player->moving)
-   {
-   player->dest_p.x = (int)(player->xy_p.x / TILE_SIZE);
-   player->dest_p.y = (int)(player->xy_p.y / TILE_SIZE);
-   }
-   if (keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W)
-   {
-   if (!player->moving)
-   {
-   player->dest_p.y -= 1;
-   player->moving = true;
-   frame_offset = 8;
-   }
-   }
-	else if (keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S)
-	{
-		if (!player->moving)
-		{
-			player->dest_p.y += 1;
-			player->moving = true;
-			frame_offset = 0;
-		}
-	}
-	else if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)
-	{
-		if (!player->moving)
-		{
-			player->dest_p.x -= 1;
-			player->moving = true;
-			frame_offset = 4;
-		}
-	}
-	else if (keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D)
-	{
-		if (!player->moving)
-		{
-			player->dest_p.x += 1;
-			player->moving = true;
-			frame_offset = 12;
-		}
-	}
-	if (frame_offset >= 0)
-	{
-		player->current_frame = (player->current_frame + 1) % 4 + frame_offset;
-		collect_pickup(gd);
-	}
-}?*/

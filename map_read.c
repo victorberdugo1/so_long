@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/10 21:18:36 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:03:31 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,8 @@ t_map	*init_map(int width, int height)
 		return (NULL);
 	map->wdt = width;
 	map->hgt = height;
-	map->exit_count = 0;
-	map->player_count = 0;
+	map->exit = 0;
+	map->player = 0;
 	map->valid = true;
 	map->closed = false;
 	map->grid = allocate_grid(width, height);

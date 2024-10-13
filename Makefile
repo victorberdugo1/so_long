@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/10/10 17:29:48 by victor           ###   ########.fr        #
+#    Updated: 2024/10/13 15:03:00 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,10 +23,10 @@ MINI_BACKUP = $(MINI).backup
 INCLUDE = libft/libft.h so_long.h
 
 SRC = input.c collect.c map_read.c player.c map.c pixel_utils.c \
-	  map_utils.c free.c map_validate.c ft_render.c player_utils.c \
-	  collect_utils.c input_utils.c
+	  map_utils.c map_validate.c ft_render.c map_path.c \
+	  collect_utils.c input_utils.c free.c free_2.c
 
-BONUS_SRC = so_long_bonus.c #print_bonus.c
+BONUS_SRC = so_long_bonus.c #free_bonus.c #print_bonus.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -42,7 +42,7 @@ all: $(NAME)
 
 HBONUS = .bonus
 
-$(NAME): $(LIBFT) $(MINI) $(OBJ) so_long.o
+$(NAME): $(LIBFT) $(MINI) $(OBJ) so_long.o 
 	$(CC) $(CFLAGS) $(OBJ) so_long.o -o $(NAME) $(LDFLAGS)
 
 $(NAME_BONUS): $(LIBFT) $(MINI) $(OBJ) $(BONUS_OBJ)

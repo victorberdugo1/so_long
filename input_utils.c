@@ -6,60 +6,12 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 13:44:01 by victor            #+#    #+#             */
-/*   Updated: 2024/10/12 18:48:27 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:28:46 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-/*
-void	ft_draw(void *param)
-{
-	t_gdata		*gd;
-	t_player	*pl;
-	t_coord		pos;
 
-	gd = (t_gdata *)param;
-	pl = gd->player;
-	pos.x = gd->window_width / 2 - (pl->scale * TILE_SIZE) / 2;
-	pos.y = gd->window_height / 2 - (pl->scale * TILE_SIZE) / 2;
-
-
-	t_gdata *game = (t_gdata *)param;
-    int32_t width = 50;
-    int32_t height = 20;
-    //uint32_t color = ft_pixel(0, 122, 51, 255);
-//uint32_t color = ft_pixel(rand() % 256, rand() % 256, rand() % 256, 255);
-
-
-    if (game->cover == NULL)
-    {
-		mlx_delete_image(game->mlx, game->cover);
-        game->cover = mlx_new_image(game->mlx, width, height);
-        if (!game->cover)
-            return;
-
-        // Rellena la nueva imagen de cover con el color de fondo
-        for (int32_t j = 0; j < height; j++)
-        {
-            for (int32_t i = 0; i < width; i++)
-            {
-                mlx_put_pixel(game->cover, i, j, color);
-            }
-        }
-        //mlx_image_to_window(game->mlx, game->cover, rand() % 250 +  150, 10);
-
-		if (gd->cover != NULL)
-		{
-			mlx_image_to_window(game->mlx, game->cover, rand() % 250 +  150, 10);
-		}
-		scale_image(pl, pl->scale, pos, gd);
-
-    }
-	//pos.x = pos.y;
-
-
-}
-*/
 void	ft_draw(void *param)
 {
 	t_gdata		*gd;

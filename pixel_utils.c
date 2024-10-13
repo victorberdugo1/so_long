@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 21:53:43 by victor            #+#    #+#             */
-/*   Updated: 2024/10/12 12:32:27 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 12:22:17 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,28 @@ void	scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h)
 			mlx_put_pixel(img, x, y, pixel);
 		}
 	}
+}
+
+void	bgclean(t_gdata *gd, int32_t width, int32_t height)
+{
+	uint32_t	color;
+	int32_t		j;
+	int32_t		i;
+
+	color = ft_pixel(0, 122, 51, 255);
+	if (gd->bg_image != NULL)
+		mlx_delete_image(gd->mlx, gd->bg_image);
+	gd->bg_image = mlx_new_image(gd->mlx, width, height);
+	if (!gd->bg_image)
+		return ;
+	j = -1;
+	while (++j < height)
+	{
+		i = -1;
+		while (++i < width)
+		{
+			mlx_put_pixel(gd->bg_image, i, j, color);
+		}
+	}
+	mlx_image_to_window(gd->mlx, gd->bg_image, 0, 0);
 }

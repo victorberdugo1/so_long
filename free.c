@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 07:50:05 by victor            #+#    #+#             */
-/*   Updated: 2024/10/09 16:23:21 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/13 11:58:55 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,10 @@ void	free_resources(t_gdata *gamedata)
 		free_map(gamedata->map, gamedata);
 		free(gamedata->map);
 		gamedata->map = NULL;
+	}
+	if (gamedata->mlx)
+	{
+		mlx_terminate(gamedata->mlx);
+		gamedata->mlx = NULL;
 	}
 }

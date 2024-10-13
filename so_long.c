@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/11 00:05:10 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 11:58:38 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,5 @@ int	main(int argc, char **argv)
 	mlx_key_hook(gamedata.mlx, ft_hook, &gamedata);
 	mlx_loop_hook(gamedata.mlx, ft_render, &gamedata);
 	mlx_loop(mlx);
-	return (free_resources(&gamedata), mlx_terminate(mlx), EXIT_SUCCESS);
+	return (free_resources(&gamedata), EXIT_SUCCESS);
 }

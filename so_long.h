@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/12 18:41:32 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:32:00 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ typedef struct s_map
 	int				wdt;
 	int				hgt;
 	t_coord			xy_m;
-	int				exit_count;
-	int				player_count;
+	int				exit;
+	int				player;
 	t_collect		*collects;
 	t_coord			player_pos;
 	t_coord			*collectible_pos;
@@ -93,22 +93,24 @@ typedef struct s_map
 
 typedef struct s_gamedata
 {
-	mlx_t		*mlx;
-	t_player	*player;
-	int			coins;
-	t_map		*map;
-	int32_t		window_width;
-	int32_t		window_height;
-	mlx_image_t	*bg_image;
-	mlx_image_t	*cover;
-	mlx_image_t	*nbr;
-	mlx_image_t	*msg;
-	bool		is_msg;
+	mlx_t			*mlx;
+	t_player		*player;
+	int				coins;
+	t_map			*map;
+	int32_t			window_width;
+	int32_t			window_height;
+	mlx_image_t		*bg_image;
+	mlx_image_t		*cover;
+	mlx_texture_t	*txt_cover;
+	mlx_image_t		*nbr;
+	mlx_image_t		*msg;
+	bool			is_msg;
 }	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
 void		ft_hook(mlx_key_data_t keydata, void *param);
 void		free_resources(t_gdata *gamedata);
+void		free_2(t_gdata *gamedata);
 void		resize_hook(int32_t width, int32_t height, void *param);
 uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
 t_map		*init_map(int width, int height);
@@ -146,4 +148,5 @@ void		scale_image_coins(t_gdata *gd);
 void		collect_pickup(t_gdata *gd);
 void		ft_draw_collectable(void *param);
 void		redraw_map(t_map *map, mlx_t *mlx);
+bool		path_valid(t_map *map);
 #endif 
