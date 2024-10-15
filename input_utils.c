@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 13:44:01 by victor            #+#    #+#             */
-/*   Updated: 2024/10/13 14:28:46 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/14 20:52:28 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 	x = (float)width / (float)gd->map->full_m->width;
 	y = (float)height / (float)gd->map->full_m->height;
 	gd->map->scale = fmaxf(x, y);
-	gd->player->scale = fmaxf(x, y);
-	sclmap(&gd->map->full_m, &gd->map->resize_m, fmaxf(x, y), gd);
+	gd->player->scale = gd->map->scale;
+	sclmap(&gd->map->full_m, &gd->map->resize_m, gd->map->scale, gd);
 	scale_image_coins(gd);
 	gd->is_msg = false;
 }

@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/13 21:32:25 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/14 23:40:39 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 # define LONG_MIN -2147483648L
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
-# define WIDTH 512
-# define HEIGHT 512
+# define WIDTH 800
+# define HEIGHT 600
 # define TILE_SIZE 64
 
 typedef struct s_coord
@@ -73,9 +73,8 @@ typedef struct s_collect
 typedef struct s_spike
 {
 	mlx_image_t		*image_s;
-	mlx_image_t		*resize_s;
-	float			scale_s;
 	t_coord			xy_s;
+	int				inst;
 }	t_spike;
 
 typedef struct s_map
@@ -95,9 +94,9 @@ typedef struct s_map
 	t_coord			player_pos;
 	t_coord			*collectible_pos;
 	bool			collect_flag;
-	t_spike			*spikes;
 	bool			valid;
 	bool			closed;
+	t_coord			exit_pos;
 }	t_map;
 
 typedef struct s_gamedata
@@ -116,6 +115,7 @@ typedef struct s_gamedata
 	mlx_image_t		*msg;
 	bool			is_msg;
 	mlx_texture_t	*txt_s;
+	t_spike			spike;
 }	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
@@ -157,12 +157,10 @@ void		scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h);
 void		update_frame(t_player *player);
 void		scale_image_coins(t_gdata *gd);
 void		collect_pickup(t_gdata *gd);
-void		copy_text_c(mlx_image_t *image, mlx_texture_t *texture);
 void		ft_draw_collectable(void *param);
 void		redraw_map(t_map *map, mlx_t *mlx);
 bool		path_valid(t_map *map);
-int			init_spikes(t_gdata *gd, int num_spikes);
-void		check_spike_collision(void *param);
-void		spike_init(t_gdata *gd, int x, int y, mlx_t *mlx);
-void		draw_spikes(void *param);
+void		spike_init(t_gdata *gd);
+void		move_spike(void *param);
+void		spike_collision(void *param);
 #endif 

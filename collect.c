@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:31:26 by victor            #+#    #+#             */
-/*   Updated: 2024/10/13 21:34:34 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/14 10:39:34 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,25 +78,6 @@ int	init_collectables_from_map(t_gdata *gamedata)
 	return (1);
 }
 
-void	copy_text_c(mlx_image_t *image, mlx_texture_t *texture)
-{
-	uint32_t	x;
-	uint32_t	y;
-	uint32_t	pxl;
-
-	y = -1;
-	while (++y < texture->height)
-	{
-		x = -1;
-		while (++x < texture->width)
-		{
-			pxl = get_pixel(texture->pixels, x, y, texture->width);
-			pxl = convert_pixel(pxl);
-			mlx_put_pixel(image, x, y, pxl);
-		}
-	}
-}
-
 void	collect_init(t_collect *coll, int x, int y, mlx_t *mlx)
 {
 	coll->xy_c.x = x;
@@ -112,5 +93,5 @@ void	collect_init(t_collect *coll, int x, int y, mlx_t *mlx)
 		mlx_delete_texture(coll->txt_c);
 		return ;
 	}
-	copy_text_c(coll->image_c, coll->txt_c);
+	coll->image_c = mlx_texture_to_image(mlx, coll->txt_c);
 }

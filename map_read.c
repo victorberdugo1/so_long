@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/13 14:03:31 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/14 12:57:28 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ t_map	*init_map(int width, int height)
 	map->player = 0;
 	map->valid = true;
 	map->closed = false;
+	map->collect_flag = false;
 	map->grid = allocate_grid(width, height);
 	if (!map->grid)
 		return (free(map), NULL);

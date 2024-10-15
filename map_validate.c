@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/13 14:32:27 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:58:18 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,11 @@ bool	validate(t_map *map, int x, int y, int *cnt)
 	if (ch == 'C')
 		(*cnt)++;
 	else if (ch == 'E')
+	{
 		map->exit++;
+		map->exit_pos.x = x;
+		map->exit_pos.y = y;
+	}
 	else if (ch == 'P')
 	{
 		map->player++;

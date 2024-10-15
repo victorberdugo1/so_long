@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/13 21:35:10 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/15 01:48:35 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ void	draw_game_move(void *param)
 {
 	t_gdata		*game;
 	static int	cycle_count = 0;
-	int			i;
 
-	i = 0;
 	game = (t_gdata *)param;
 	if (game->is_msg)
 		return ;
@@ -33,14 +31,16 @@ void	draw_game_move(void *param)
 		mlx_put_string(game->mlx, "Move count:", 20, 10);
 		game->cover = mlx_texture_to_image(game->mlx, game->txt_cover);
 		mlx_image_to_window(game->mlx, game->cover, 150, 10);
+
+		//int x_offset = (game->window_width / 2) - (game->player->xy_p.x * game->map->scale)
+		//	+ (TILE_SIZE * game->map->scale) + (game->map->exit_pos.x * game->map->scale * TILE_SIZE ); 
+		//int y_offset = (game->window_height / 2) - (game->player->xy_p.y * game->map->scale)
+		//	+ (TILE_SIZE * game->map->scale) + (game->map->exit_pos.y * game->map->scale * TILE_SIZE ) ;
+		mlx_resize_image(game->spike.image_s, TILE_SIZE * game->map->scale, 
+				TILE_SIZE  * game->map->scale);
+		mlx_image_to_window(game->mlx, game->spike.image_s,game->spike.xy_s.x, game->spike.xy_s.y);
+		game->spike.inst++;
 		game->is_msg = true;
-		while (i <= game->num_spikes)
-		{
-			t_spike *spike = game->map->spikes;
-			mlx_image_to_window(game->mlx, spike->image_s, 
-					spike->xy_s.x, spike->xy_s.y);
-			i++;
-		}
 		cycle_count = 0;
 	}
 }
@@ -84,8 +84,7 @@ int	init_game(int argc, char **argv, t_gdata *gamedata, t_player *player)
 	if (!init_collectables_from_map(gamedata))
 		return (EXIT_FAILURE);
 	gamedata->txt_s = mlx_load_png("./textures/spike.png");
-	if (!init_spikes(gamedata, 3))
-		return (EXIT_FAILURE);
+	spike_init(gamedata);
 	gamedata->txt_cover = mlx_load_png("./textures/cover.png");
 	if (!gamedata->txt_cover)
 		return (mlx_close_window(mlx), EXIT_FAILURE);
@@ -97,10 +96,11 @@ int	game_loop(t_gdata *gamedata)
 	mlx_key_hook(gamedata->mlx, ft_hook, gamedata);
 	mlx_resize_hook(gamedata->mlx, resize_hook, gamedata);
 	mlx_loop_hook(gamedata->mlx, ft_render, gamedata);
-	//mlx_loop_hook(gamedata->mlx, draw_spikes, gamedata);
-	//mlx_loop_hook(gamedata->mlx, check_spike_collision, gamedata);
+
+	mlx_loop_hook(gamedata->mlx, spike_collision, gamedata);
 	mlx_loop_hook(gamedata->mlx, draw_game_move, gamedata);
 	mlx_loop_hook(gamedata->mlx, draw_game_info, gamedata);
+	mlx_loop_hook(gamedata->mlx, move_spike, gamedata);
 	mlx_loop(gamedata->mlx);
 	return (EXIT_SUCCESS);
 }
