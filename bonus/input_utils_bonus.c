@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_utils.c                                      :+:      :+:    :+:   */
+/*   input_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 13:44:01 by victor            #+#    #+#             */
-/*   Updated: 2024/10/15 10:26:49 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/15 09:51:38 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "so_long_bonus.h"
 
 void	ft_draw(void *param)
 {
@@ -43,6 +43,7 @@ void	resize_hook(int32_t width, int32_t height, void *param)
 	gd->player->scale = gd->map->scale;
 	sclmap(&gd->map->full_m, &gd->map->resize_m, gd->map->scale, gd);
 	scale_image_coins(gd);
+	gd->is_msg = false;
 }
 
 void	ft_draw_map(void *param)

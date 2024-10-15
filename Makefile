@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/10/14 13:48:40 by victor           ###   ########.fr        #
+#    Updated: 2024/10/15 10:23:09 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,39 +14,36 @@ NAME = so_long
 NAME_BONUS = so_long_bonus
 
 LIBFT = libft/libft.a
-
-HBONUS = .bonus
-
 MINI = MLX42/build/libmlx42.a
 MINI_BACKUP = $(MINI).backup
 
-INCLUDE = libft/libft.h so_long.h
-
 SRC = input.c collect.c map_read.c player.c map.c pixel_utils.c \
-	  map_utils.c map_validate.c ft_render.c map_path.c \
-	  collect_utils.c input_utils.c spike.c free.c free_2.c
+      map_utils.c map_validate.c ft_render.c map_path.c \
+      collect_utils.c input_utils.c free.c so_long.c
 
-BONUS_SRC = so_long_bonus.c #free_bonus.c #print_bonus.c
+BONUS_SRC = bonus/so_long_bonus.c bonus/collect_bonus.c bonus/ft_render_bonus.c \
+            bonus/map_path_bonus.c bonus/pixel_utils_bonus.c bonus/spike_bonus.c \
+            bonus/collect_utils_bonus.c bonus/input_bonus.c bonus/map_read_bonus.c \
+            bonus/player_bonus.c bonus/free2_bonus.c bonus/input_utils_bonus.c \
+            bonus/map_utils_bonus.c bonus/free_bonus.c bonus/map_bonus.c \
+            bonus/map_validate_bonus.c
 
 OBJ = $(SRC:.c=.o)
-
 BONUS_OBJ = $(BONUS_SRC:%.c=%.o)
 
 CC = gcc
-
-CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc #-fsanitize=address,undefined -g
-
+CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc
 LDFLAGS = $(LIBFT) $(MINI) -lglfw -lm
-
-all: $(NAME)
 
 HBONUS = .bonus
 
-$(NAME): $(LIBFT) $(MINI) $(OBJ) so_long.o 
-	$(CC) $(CFLAGS) $(OBJ) so_long.o -o $(NAME) $(LDFLAGS)
+all: $(NAME)
 
-$(NAME_BONUS): $(LIBFT) $(MINI) $(OBJ) $(BONUS_OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(BONUS_OBJ) -o $(NAME_BONUS) $(LDFLAGS)
+$(NAME): $(LIBFT) $(MINI) $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS)
+
+$(NAME_BONUS): $(LIBFT) $(MINI) $(BONUS_OBJ)
+	$(CC) $(CFLAGS) $(BONUS_OBJ) -o $(NAME_BONUS) $(LDFLAGS)
 
 $(LIBFT):
 	@make -C libft
@@ -57,26 +54,22 @@ $(MINI):
 %.o: %.c so_long.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BONUS_OBJ): $(BONUS_SRC) so_long.h Makefile
-	$(CC) $(CFLAGS) -c $< -o $@
-
-so_long.o: so_long.c so_long.h Makefile
+bonus/%.o: bonus/%.c bonus/so_long_bonus.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 bonus: $(NAME_BONUS)
 	@if [ ! -f $(HBONUS) ] || \
 		find $(BONUS_OBJ) -newer $(HBONUS) | grep -q .; then \
+		$(MAKE) $(NAME_BONUS); \
 		touch $(HBONUS); \
 	else \
 		echo "make bonus: Nothing to be done for 'bonus'."; \
 	fi
 
 clean:
-	rm -f $(OBJ) $(BONUS_OBJ) so_long.o
-	@cp $(MINI) $(MINI_BACKUP)
+	rm -f $(OBJ) $(BONUS_OBJ)
 	@make -C libft clean
 	@make -C MLX42/build clean
-	@mv $(MINI_BACKUP) $(MINI)
 
 fclean: clean
 	rm -f $(NAME) $(NAME_BONUS)
@@ -85,4 +78,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re test
+.PHONY: all bonus clean fclean re

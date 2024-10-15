@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.h                                          :+:      :+:    :+:   */
+/*   so_long_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/15 10:26:01 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/15 10:24:49 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SO_LONG_H
-# define SO_LONG_H
+#ifndef SO_LONG_BONUS_H
+# define SO_LONG_BONUS_H
 
 # include <stdlib.h>
 # include <fcntl.h>
@@ -19,8 +19,8 @@
 # include <stdio.h>
 # include <string.h>
 # include <math.h>
-# include "libft/libft.h"
-# include "MLX42/include/MLX42/MLX42.h"
+# include "../libft/libft.h"
+# include "../MLX42/include/MLX42/MLX42.h"
 
 # define LONG_MAX 2147483647L
 # define LONG_MIN -2147483648L
@@ -70,6 +70,13 @@ typedef struct s_collect
 	bool			pick;
 }	t_collect;
 
+typedef struct s_spike
+{
+	mlx_image_t		*image_s;
+	t_coord			xy_s;
+	int				inst;
+}	t_spike;
+
 typedef struct s_map
 {
 	mlx_image_t		*full_m;
@@ -102,6 +109,13 @@ typedef struct s_gamedata
 	int32_t			window_width;
 	int32_t			window_height;
 	mlx_image_t		*bg_image;
+	mlx_image_t		*cover;
+	mlx_texture_t	*txt_cover;
+	mlx_image_t		*nbr;
+	mlx_image_t		*msg;
+	bool			is_msg;
+	mlx_texture_t	*txt_s;
+	t_spike			spike;
 }	t_gdata;
 
 void		player_init(t_player *player, mlx_t *mlx);
@@ -146,4 +160,7 @@ void		collect_pickup(t_gdata *gd);
 void		ft_draw_collectable(void *param);
 void		redraw_map(t_map *map, mlx_t *mlx);
 bool		path_valid(t_map *map);
+void		spike_init(t_gdata *gd);
+void		move_spike(void *param);
+void		spike_collision(void *param);
 #endif 
