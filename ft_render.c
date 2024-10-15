@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:29:25 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/14 12:43:29 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:39:16 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ void	ft_render(void *param)
 	t_gdata	*gd;
 
 	gd = (t_gdata *)param;
+	if (gd->map->scale < 1)
+		return ;
 	ft_move(gd->player, gd);
 	ft_draw(param);
 	ft_draw_collectable(param);
