@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/15 09:51:38 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/15 14:52:56 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,10 @@ void	draw_game_move(void *param)
 		mlx_put_string(game->mlx, "Move count:", 20, 10);
 		game->cover = mlx_texture_to_image(game->mlx, game->txt_cover);
 		mlx_image_to_window(game->mlx, game->cover, 150, 10);
-
-		//int x_offset = (game->window_width / 2) - (game->player->xy_p.x * game->map->scale)
-		//	+ (TILE_SIZE * game->map->scale) + (game->map->exit_pos.x * game->map->scale * TILE_SIZE ); 
-		//int y_offset = (game->window_height / 2) - (game->player->xy_p.y * game->map->scale)
-		//	+ (TILE_SIZE * game->map->scale) + (game->map->exit_pos.y * game->map->scale * TILE_SIZE ) ;
-		mlx_resize_image(game->spike.image_s, TILE_SIZE * game->map->scale, 
-				TILE_SIZE  * game->map->scale);
-		mlx_image_to_window(game->mlx, game->spike.image_s,game->spike.xy_s.x, game->spike.xy_s.y);
+		mlx_resize_image(game->spike.image_s, TILE_SIZE * game->map->scale,
+			TILE_SIZE * game->map->scale);
+		mlx_image_to_window(game->mlx, game->spike.image_s,
+			game->spike.xy_s.x, game->spike.xy_s.y);
 		game->spike.inst++;
 		game->is_msg = true;
 		cycle_count = 0;
@@ -96,7 +92,6 @@ int	game_loop(t_gdata *gamedata)
 	mlx_key_hook(gamedata->mlx, ft_hook, gamedata);
 	mlx_resize_hook(gamedata->mlx, resize_hook, gamedata);
 	mlx_loop_hook(gamedata->mlx, ft_render, gamedata);
-
 	mlx_loop_hook(gamedata->mlx, spike_collision, gamedata);
 	mlx_loop_hook(gamedata->mlx, draw_game_move, gamedata);
 	mlx_loop_hook(gamedata->mlx, draw_game_info, gamedata);
