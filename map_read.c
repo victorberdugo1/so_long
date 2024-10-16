@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/16 09:07:46 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/16 18:41:05 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@ t_map	*read_map(const char *filename)
 	int		height;
 	t_map	*map;
 	int		len;
+	int	i;
 
 	len = ft_strlen(filename);
 	if (len < 4 || ft_strncmp(&filename[len - 4], ".ber", 4) != 0)
 	{
-		perror("Error: File extension must be .ber");
+		perror("Error\nFile extension must be .ber");
 		return (NULL);
 	}
 	if (map_size(filename, &width, &height) < 0)
@@ -31,8 +32,12 @@ t_map	*read_map(const char *filename)
 	if (!map)
 		return (NULL);
 	map = fill_map(filename, width, map);
-	if (!validate_map(map))
-		return (free(map), NULL);
+	i = -1;
+	if (!validate_map(map)){
+	while (++i < map->hgt){
+		if (map->grid[i])
+			free(map->grid[i]);}
+		return (free(map), NULL);}
 	return (map);
 }
 
@@ -46,7 +51,7 @@ int	map_size(const char *filename, int *width, int *height)
 	*height = 0;
 	file = open(filename, O_RDONLY);
 	if (file < 0)
-		return (perror("Error opening the file"), -1);
+		return (perror("Error\nFile"), -1);
 	line = get_next_line(file);
 	while (line != NULL)
 	{
@@ -59,6 +64,8 @@ int	map_size(const char *filename, int *width, int *height)
 		free(line);
 		line = get_next_line(file);
 	}
+	if (line)
+		free(line);
 	close(file);
 	return (0);
 }
@@ -72,7 +79,7 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 
 	file = open(filename, O_RDONLY);
 	if (file < 0)
-		return (perror("Error opening the file"), free(map), NULL);
+		return (perror("Error\nFile"), free(map), NULL);
 	h = 0;
 	line = get_next_line(file);
 	while (line != NULL)
@@ -88,6 +95,8 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 		h++;
 		line = get_next_line(file);
 	}
+	if (line)
+		free(line);
 	return (close(file), map);
 }
 

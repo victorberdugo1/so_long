@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/16 08:55:49 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/16 18:24:02 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ bool	validate_map(t_map *map)
 	}
 	if (cnt < 1)
 		ft_printf("Error\nThe map must contain at least one collectible.\n");
-	else if (map->exit < 1)
-		ft_printf("Error\nThe map must contain at least one exit.\n");
+	else if (map->exit != 1)
+		ft_printf("Error\nThe map must contain exactly one exit.\n");
 	else if (map->player != 1)
 		ft_printf("Error\nThe map must contain exactly one player position.\n");
-	return (cnt >= 1 && map->exit >= 1 && map->player == 1 && path_valid(map));
+	return (cnt >= 1 && map->exit == 1 && map->player == 1 && path_valid(map));
 }

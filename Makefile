@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/10/15 10:23:09 by victor           ###   ########.fr        #
+#    Updated: 2024/10/16 18:20:13 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,12 +32,15 @@ OBJ = $(SRC:.c=.o)
 BONUS_OBJ = $(BONUS_SRC:%.c=%.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc
+CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc -g
 LDFLAGS = $(LIBFT) $(MINI) -lglfw -lm
 
 HBONUS = .bonus
 
-all: $(NAME)
+all: libs $(NAME)
+
+libs:
+	@make -C libft
 
 $(NAME): $(LIBFT) $(MINI) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS)

@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 07:50:05 by victor            #+#    #+#             */
-/*   Updated: 2024/10/13 11:58:55 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/16 18:03:12 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ void	free_map(t_map *map, t_gdata *gd)
 		mlx_delete_texture(map->texture_m);
 	i = -1;
 	while (++i < map->hgt)
-		free(map->grid[i]);
+		if (map->grid[i])
+			free(map->grid[i]);
 	free(map->grid);
 	map->grid = NULL;
 	if (map->collectible_pos)

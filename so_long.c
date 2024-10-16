@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/16 08:56:48 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/16 18:29:43 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ int	main(int argc, char **argv)
 		return (ft_printf("Error\nmap_file.ber missing\n"), EXIT_FAILURE);
 	gamedata.map = read_map(argv[1]);
 	if (!gamedata.map)
+	{
+//free_resources(&gamedata);
+		//free(
 		return (ft_printf("Invalid map\n"), EXIT_FAILURE);
+	}
 	mlx_set_setting(MLX_MAXIMIZED, true);
 	mlx = mlx_init(WIDTH, HEIGHT, "so_long", true);
 	if (!mlx)
