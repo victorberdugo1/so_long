@@ -6,15 +6,10 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/15 19:35:11 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/16 08:56:48 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
 #include "so_long.h"
 
 int	main(int argc, char **argv)
