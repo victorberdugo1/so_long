@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 14:30:41 by victor            #+#    #+#             */
-/*   Updated: 2024/10/15 09:51:38 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/16 10:47:28 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,6 @@ bool	path_valid(t_map *map)
 	path_exists = dfs(map, map->player_pos.x, map->player_pos.y, visited);
 	free_visited_array(visited, map->hgt);
 	if (!path_exists)
-		printf("Error\nNo valid path from player to exit.\n");
+		ft_printf("Error\nNo valid path from player to exit.\n");
 	return (path_exists);
 }
