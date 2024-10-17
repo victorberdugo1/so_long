@@ -6,12 +6,17 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/17 01:45:03 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/17 12:12:51 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+/* ************************************************************************** */
+/* Verifies the file has .ber extension, gets map size, initializes and fills */
+/* the map, then validates it. Frees resources if validation fails.           */
+/* Returns the t_map pointer or NULL if an error occurs.                      */
+/* ************************************************************************** */
 t_map	*read_map(const char *filename)
 {
 	int		width;
@@ -40,6 +45,11 @@ t_map	*read_map(const char *filename)
 	return (map);
 }
 
+/* ************************************************************************** */
+/* Opens the .ber file, reads each line to determine the width and height of  */
+/* the map. Ensures all lines have the same width. Returns 0 if successful,   */
+/* or -1 on error, printing an error message.                                 */
+/* ************************************************************************** */
 int	map_size(const char *filename, int *width, int *height)
 {
 	int		file;
@@ -67,35 +77,45 @@ int	map_size(const char *filename, int *width, int *height)
 	return (0);
 }
 
-t_map	*fill_map(const char *filename, int width, t_map *map)
+/* ************************************************************************** */
+/* Allocates memory for a t_map structure and initializes its fields,         */
+/* including dimensions, player position, and status flags. Also allocates    */
+/* memory for the map's grid. Returns a pointer to t_map or NULL if memory    */
+/* allocation fails.                                                          */
+/* ************************************************************************** */
+t_map	*init_map(int width, int height)
 {
-	int			file;
-	int			h;
-	int			w;
-	char		*line;
+	t_map	*map;
 
-	file = open(filename, O_RDONLY);
-	if (file < 0)
-		return (free(map), NULL);
-	h = 0;
-	line = get_next_line(file);
-	while (line != NULL)
+	map = malloc(sizeof(t_map));
+	if (!map)
 	{
-		w = -1;
-		while (++w < width && line[w] != '\0')
-		{
-			map->grid[h][w] = line[w];
-			if (line[w] == 'P')
-				map->player_pos = (t_coord){w, h};
-		}
-		free(line);
-		h++;
-		line = get_next_line(file);
+		ft_printf("Error\nFailed to allocate memory for map.\n");
+		return (NULL);
 	}
-	close(file);
+	map->wdt = width;
+	map->hgt = height;
+	map->exit = 0;
+	map->player = 0;
+	map->valid = true;
+	map->closed = false;
+	map->collect_flag = false;
+	map->grid = allocate_grid(width, height);
+	if (!map->grid)
+	{
+		free(map);
+		return (NULL);
+	}
+	map->player_pos.x = -1;
+	map->player_pos.y = -1;
 	return (map);
 }
 
+/* ************************************************************************** */
+/* Allocates memory for a 2D array (grid) based on the specified width and    */
+/* height. Returns a pointer to the allocated grid or NULL if memory          */
+/* allocation fails, freeing previously allocated rows in case of failure.    */
+/* ************************************************************************** */
 char	**allocate_grid(int width, int height)
 {
 	char	**grid;
@@ -124,30 +144,36 @@ char	**allocate_grid(int width, int height)
 	return (grid);
 }
 
-t_map	*init_map(int width, int height)
+/* ************************************************************************** */
+/* Reads the map data from the specified file and fills the t_map structure's */
+/* grid. It also updates the player's position when 'P' is encountered.       */
+/* Returns the pointer to t_map or NULL if an error occurs.                   */
+/* ************************************************************************** */
+t_map	*fill_map(const char *filename, int width, t_map *map)
 {
-	t_map	*map;
+	int			file;
+	int			h;
+	int			w;
+	char		*line;
 
-	map = malloc(sizeof(t_map));
-	if (!map)
+	file = open(filename, O_RDONLY);
+	if (file < 0)
+		return (free(map), NULL);
+	h = 0;
+	line = get_next_line(file);
+	while (line != NULL)
 	{
-		ft_printf("Error\nFailed to allocate memory for map.\n");
-		return (NULL);
+		w = -1;
+		while (++w < width && line[w] != '\0')
+		{
+			map->grid[h][w] = line[w];
+			if (line[w] == 'P')
+				map->player_pos = (t_coord){w, h};
+		}
+		free(line);
+		h++;
+		line = get_next_line(file);
 	}
-	map->wdt = width;
-	map->hgt = height;
-	map->exit = 0;
-	map->player = 0;
-	map->valid = true;
-	map->closed = false;
-	map->collect_flag = false;
-	map->grid = allocate_grid(width, height);
-	if (!map->grid)
-	{
-		free(map);
-		return (NULL);
-	}
-	map->player_pos.x = -1;
-	map->player_pos.y = -1;
+	close(file);
 	return (map);
 }

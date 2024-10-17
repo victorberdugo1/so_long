@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:34 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/17 00:07:11 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/17 20:57:09 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,46 +104,66 @@ typedef struct s_gamedata
 	mlx_image_t		*bg_image;
 }	t_gdata;
 
-void		player_init(t_player *player, mlx_t *mlx);
-void		ft_hook(mlx_key_data_t keydata, void *param);
-void		free_resources(t_gdata *gamedata);
-void		free_2(t_gdata *gamedata);
-void		resize_hook(int32_t width, int32_t height, void *param);
-uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
-t_map		*init_map(int width, int height);
+//Map Validation and Initialization
+bool		path_valid(t_map *map);
 t_map		*read_map(const char *filename);
 int			map_size(const char *filename, int *width, int *height);
+t_map		*init_map(int width, int height);
+char		**allocate_grid(int width, int height);
 t_map		*fill_map(const char *filename, int width, t_map *map);
-void		collect_init(t_collect *coll, int x, int y, mlx_t *mlx);
-void		map_start(t_map *map, mlx_t *mlx);
-void		sclmap(mlx_image_t **im, mlx_image_t **siz, float scl, t_gdata *gd);
-void		bgclean(t_gdata *gd, int32_t width, int32_t height);
-int			all_collected(t_map *map);
-uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width);
-t_coord		get_border_sprite(t_map *map, int coord_y, int coord_x);
-uint32_t	convert_pixel(uint32_t px);
-void		pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy);
-t_coord		get_inner_sprite(t_map *mp, int y, int x);
-void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
-void		ft_draw(void *param);
-void		ft_draw_coll(void *param);
-void		ft_draw_map(void *param);
-void		ft_render(void *param);
-void		combine_tiles(t_map *map);
-int			count_collectables(t_map *map);
-void		process_door_tile(t_map *map, mlx_t *mlx, int i, int j);
-void		free_collects(t_collect *collects, int coin_count, t_gdata *gd);
-int			init_collectables_from_map(t_gdata *gamedata);
 bool		validate_map(t_map *map);
-void		ft_move(t_player *player, t_gdata *gd);
-bool		can_move_to(int x, int y, t_gdata *gd);
-void		update_frame(t_player *player);
-void		scale_image(t_player *player, float scl, t_coord pos, t_gdata *gd);
-void		scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h);
-void		update_frame(t_player *player);
-void		scale_image_coins(t_gdata *gd);
-void		collect_pickup(t_gdata *gd);
-void		ft_draw_collectable(void *param);
-void		redraw_map(t_map *map, mlx_t *mlx);
+bool		validate_ch(t_map *map, int x, int y, int *cnt);
+bool		validate_walls(t_map *map);
 bool		path_valid(t_map *map);
+char		**create_visited_array(int height, int width);
+bool		dfs(t_map *map, int x, int y, char **visited);
+bool		is_valid_move(t_map *map, int x, int y, char **visited);
+//Map Rendering and Image Setup
+void		map_start(t_map *map, mlx_t *mlx);
+void		create_full_image(t_map *map, mlx_t *mlx);
+void		process_tile(t_map *map, mlx_t *mlx, int i, int j);
+t_coord		get_border_sprite(t_map *map, int coord_y, int coord_x);
+t_coord		get_inner_sprite(t_map *mp, int y, int x);
+void		combine_tiles(t_map *map);
+void		draw_tile(t_map *map, int i, int j);
+void		pxls_subim(mlx_image_t *sbim, mlx_texture_t *txt, int spx, int spy);
+//Player Initialization
+void		player_init(t_player *player, mlx_t *mlx);
+void		process_player_tile(t_player *player, mlx_t *mlx, int frame_index);
+void		cp_tx(mlx_image_t *sub, mlx_texture_t *txt, int x_fset, int y_fset);
+//Collectables Initialization
+int			init_collectables_from_map(t_gdata *gamedata);
+int			count_collectables(t_map *map);
+void		init_collectables(t_gdata *gd);
+void		collect_init(t_collect *coll, int x, int y, mlx_t *mlx);
+//Rezise hook
+void		resize_hook(int32_t width, int32_t height, void *param);
+void		bgclean(t_gdata *gd, int32_t width, int32_t height);
+void		sclmap(mlx_image_t **im, mlx_image_t **siz, float scl, t_gdata *gd);
+void		scale_image_coins(t_gdata *gd);
+//Key hook
+void		ft_hook(mlx_key_data_t keydata, void *param);
+void		collect_pickup(t_gdata *gd);
+int			all_collected(t_map *map);
+void		redraw_map(t_map *map, mlx_t *mlx);
+void		process_door_tile(t_map *map, mlx_t *mlx, int i, int j);
+//Loop hook
+void		ft_render(void *param);
+void		ft_move(t_player *player, t_gdata *gd);
+void		update_frame(t_player *player);
+void		update_pos(t_player *player, float tgt_x, float tgt_y, t_gdata *gd);
+void		moving_pos(t_player *player, float dist_x, float dist_y);
+bool		can_move_to(int x, int y, t_gdata *gd);
+void		ft_draw(void *param);
+void		scale_image(t_player *player, float scl, t_coord pos, t_gdata *gd);
+void		ft_draw_map(void *param);
+void		ft_draw_collectable(void *param);
+//Free
+void		free_resources(t_gdata *gamedata);
+void		free_collects(t_collect *collects, int coin_count, t_gdata *gd);
+//Pixel Modification
+uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width);
+uint32_t	convert_pixel(uint32_t px);
+uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
+void		scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h);
 #endif 

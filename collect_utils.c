@@ -6,65 +6,19 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 10:57:47 by victor            #+#    #+#             */
-/*   Updated: 2024/10/14 13:31:15 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/17 20:54:55 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	ft_draw_collectable(void *param)
-{
-	t_gdata		*gd;
-	t_collect	*coin;
-	int			x_off;
-	int			y_off;
-	int			idx;
+bool	try_pickup(t_player *player, t_collect *coin, int range);
 
-	gd = (t_gdata *)param;
-	if (!gd->map->resize_m->instances)
-		return ;
-	idx = -1;
-	while (++idx < gd->coins)
-	{
-		coin = &gd->map->collects[idx];
-		if (!coin->pick)
-		{
-			x_off = (gd->window_width / 2) - (
-					(gd->player->xy_p.x - coin->xy_c.x * TILE_SIZE)
-					* gd->player->scale);
-			y_off = (gd->window_height / 2) -(
-					(gd->player->xy_p.y - coin->xy_c.y * TILE_SIZE)
-					* gd->player->scale);
-			coin->resize_c->instances[0].x = x_off;
-			coin->resize_c->instances[0].y = y_off;
-		}
-	}
-}
-
-bool	try_pickup(t_player *player, t_collect *coin, int range)
-{
-	float	player_real_x;
-	float	player_real_y;
-	float	coin_real_x;
-	float	coin_real_y;
-
-	player_real_x = player->xy_p.x;
-	player_real_y = player->xy_p.y;
-	coin_real_x = coin->xy_c.x * TILE_SIZE + TILE_SIZE / 2;
-	coin_real_y = coin->xy_c.y * TILE_SIZE + TILE_SIZE / 2;
-	if (player_real_x >= (coin_real_x - range / 2)
-		&& player_real_x <= (coin_real_x + range / 2)
-		&& player_real_y >= (coin_real_y - range / 2)
-		&& player_real_y <= (coin_real_y + range / 2))
-	{
-		coin->pick = true;
-		coin->xy_c.x = -1000;
-		coin->xy_c.y = -1000;
-		return (true);
-	}
-	return (false);
-}
-
+/* ************************************************************************** */
+/* Checks if the player can collect any nearby items and updates their state. */
+/* Then handles memory for the collected items and redraws the map if all     */
+/* items have been collected.                                                 */
+/* ************************************************************************** */
 void	collect_pickup(t_gdata *gd)
 {
 	int			idx;
@@ -89,47 +43,83 @@ void	collect_pickup(t_gdata *gd)
 	}
 }
 
-bool	update_coin_image(t_gdata *gd, t_collect *coin)
+/* ************************************************************************** */
+/* Checks if the player is within the pickup range of a collectible item.     */
+/* If the player can pick it up, updates the collectible's state and          */
+/* position. Returns true if the item was picked up, false otherwise.         */
+/* ************************************************************************** */
+bool	try_pickup(t_player *player, t_collect *coin, int range)
 {
-	uint32_t	new_w;
-	uint32_t	new_h;
+	float	player_real_x;
+	float	player_real_y;
+	float	coin_real_x;
+	float	coin_real_y;
 
-	new_w = (uint32_t)(coin->image_c->width * gd->map->scale);
-	new_h = (uint32_t)(coin->image_c->height * gd->map->scale);
-	if (!coin->resize_c)
+	player_real_x = player->xy_p.x;
+	player_real_y = player->xy_p.y;
+	coin_real_x = coin->xy_c.x * TILE_SIZE + TILE_SIZE / 2;
+	coin_real_y = coin->xy_c.y * TILE_SIZE + TILE_SIZE / 2;
+	if (player_real_x >= (coin_real_x - range / 2)
+		&& player_real_x <= (coin_real_x + range / 2)
+		&& player_real_y >= (coin_real_y - range / 2)
+		&& player_real_y <= (coin_real_y + range / 2))
 	{
-		coin->resize_c = mlx_new_image(gd->mlx,
-				coin->image_c->width, coin->image_c->height);
-		if (!coin->resize_c)
-			return (false);
+		coin->pick = true;
+		coin->xy_c.x = -1000;
+		coin->xy_c.y = -1000;
+		return (true);
 	}
-	mlx_delete_image(gd->mlx, coin->resize_c);
-	coin->resize_c = mlx_new_image(gd->mlx, new_w, new_h);
-	if (!coin->resize_c)
-		return (false);
-	scale_pxl(coin->resize_c, coin->image_c, new_w, new_h);
-	return (true);
+	return (false);
 }
 
-void	scale_image_coins(t_gdata *gd)
+/* ************************************************************************** */
+/* Checks if all collectible items in the map have been picked up by the      */
+/* player. Counts the total collectibles and compares it to the number        */
+/* of items that have been collected. Returns 1 if all are collected,         */
+/* otherwise returns 0.                                                       */
+/* ************************************************************************** */
+int	all_collected(t_map *m)
 {
-	int			idx;
-	int			x_set;
-	int			y_set;
-	t_collect	*coin;
+	int	total;
+	int	collected;
+	int	i;
 
-	idx = -1;
-	while (++idx < gd->coins)
+	collected = 0;
+	i = 0;
+	if (m->collects == NULL)
+		return (0);
+	total = count_collectables(m);
+	while (i < total)
 	{
-		coin = &gd->map->collects[idx];
-		if (!update_coin_image(gd, coin))
-			continue ;
-		x_set = (gd->window_width / 2) - (
-				(gd->player->xy_p.x - coin->xy_c.x * TILE_SIZE)
-				+ (gd->player->scale * TILE_SIZE) / 2);
-		y_set = (gd->window_height / 2) - (
-				(gd->player->xy_p.y - coin->xy_c.y * TILE_SIZE)
-				+ (gd->player->scale * TILE_SIZE) / 2);
-		mlx_image_to_window(gd->mlx, coin->resize_c, x_set, y_set);
+		if (m->collects[i].pick)
+			collected++;
+		i++;
 	}
+	if (collected == total)
+		return (1);
+	else
+		return (0);
+}
+
+/* ************************************************************************** */
+/* Processes a door tile on the map. Creates a subimage for the door based    */
+/* on its position and assigns it to the map tile grid. If subimage creation  */
+/* fails, frees map textures and closes the window.                           */
+/* ************************************************************************** */
+void	process_door_tile(t_map *map, mlx_t *mlx, int i, int j)
+{
+	mlx_image_t	*subimage;
+	t_coord		coords;
+
+	if (map->grid[i][j] != 'E')
+		return ;
+	coords = (t_coord){3, 3};
+	subimage = mlx_new_image(mlx, TILE_SIZE, TILE_SIZE);
+	if (!subimage)
+	{
+		mlx_delete_texture(map->texture_m);
+		return (mlx_close_window(mlx), free(map->tiles));
+	}
+	pxls_subim(subimage, map->texture_m, coords.x, coords.y);
+	map->tiles[i * map->wdt + j] = subimage;
 }

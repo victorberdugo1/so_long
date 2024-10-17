@@ -6,17 +6,17 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 21:53:43 by victor            #+#    #+#             */
-/*   Updated: 2024/10/13 12:22:17 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/17 20:29:40 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
-{
-	return ((r << 24) | (g << 16) | (b << 8) | a);
-}
-
+/* ************************************************************************** */
+/* Retrieves the pixel color from the given pixel data at specified           */
+/* coordinates (src_x, src_y) and width. Returns the pixel color as a         */
+/* uint32_t value.                                                            */
+/* ************************************************************************** */
 uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width)
 {
 	int			pixel_index;
@@ -27,6 +27,10 @@ uint32_t	get_pixel(uint8_t *pixels, int32_t src_x, int32_t src_y, int width)
 	return (px);
 }
 
+/* ************************************************************************** */
+/* Converts a pixel color value to a format suitable for rendering in the     */
+/* graphical context. Returns the converted pixel color as a uint32_t value. */
+/* ************************************************************************** */
 uint32_t	convert_pixel(uint32_t px)
 {
 	uint8_t	red;
@@ -41,6 +45,21 @@ uint32_t	convert_pixel(uint32_t px)
 	return (ft_pixel(blue, green, red, alpha));
 }
 
+/* ************************************************************************** */
+/* Creates a pixel value in a specific format using the provided color        */
+/* components (blue, green, red, alpha). This function packs the individual   */
+/* color components into a single 32-bit integer suitable for use in image    */
+/* rendering or manipulation.                                                 */
+/* ************************************************************************** */
+uint32_t	ft_pixel(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
+{
+	return ((r << 24) | (g << 16) | (b << 8) | a);
+}
+
+/* ************************************************************************** */
+/* Scales the pixel data from the source image to fit the new dimensions.     */
+/* Then handles memory for the resized image by copying the pixel data.       */
+/* ************************************************************************** */
 void	scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h)
 {
 	int32_t		x;
@@ -64,6 +83,12 @@ void	scale_pxl(mlx_image_t *img, mlx_image_t *src, int32_t w, int32_t h)
 	}
 }
 
+/* ************************************************************************** */
+/* Creates a new background image filled with a solid color to cover the      */
+/* window. Deletes the previous background image if it exists, allocates      */
+/* a new image, and fills it with the specified color. Finally, it draws the  */
+/* background image to the window.                                            */
+/* ************************************************************************** */
 void	bgclean(t_gdata *gd, int32_t width, int32_t height)
 {
 	uint32_t	color;

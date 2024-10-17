@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 14:30:41 by victor            #+#    #+#             */
-/*   Updated: 2024/10/16 10:47:28 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:29:41 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 bool	is_valid_move(t_map *map, int x, int y, char **visited)
 {
 	return (x >= 0 && x < map->wdt && y >= 0 && y < map->hgt
-		&& (map->grid[y][x] == '0' || map->grid[y][x] == 'E')
-		&& !visited[y][x]);
+		&& (map->grid[y][x] == '0' || map->grid[y][x] == 'E'
+			|| map->grid[y][x] == 'C')
+			&& !visited[y][x]);
 }
 
 bool	dfs(t_map *map, int x, int y, char **visited)

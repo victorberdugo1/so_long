@@ -6,62 +6,51 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/17 02:26:01 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/17 14:37:06 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-t_coord	get_border_sprite(t_map *map, int coord_y, int coord_x)
+/* ************************************************************************** */
+/* Validates the map structure by checking dimensions, characters, wall       */
+/* integrity, and the presence of collectibles and player position. Returns   */
+/* true if valid, false otherwise, printing specific error messages.          */
+/* ************************************************************************** */
+bool	validate_map(t_map *map)
 {
-	if (coord_y == 0)
+	int		y;
+	size_t	x;
+	int		cnt;
+	size_t	row_length;
+
+	cnt = 0;
+	y = -1;
+	while (++y < map->hgt)
 	{
-		if (coord_x == 0)
-			return ((t_coord){0, 0});
-		else if (coord_x == map->wdt - 1)
-			return ((t_coord){2, 0});
-		else
-			return ((t_coord){1, 0});
+		row_length = ft_strlen(map->grid[y]);
+		if (row_length != (size_t)map->wdt)
+			return (ft_printf("Error\nNot rectangular map.\n"), false);
+		x = -1;
+		while (++x < row_length)
+			if (!validate_ch(map, (int)x, y, &cnt))
+				return (false);
 	}
-	else if (coord_y == map->hgt - 1)
-	{
-		if (coord_x == 0)
-			return ((t_coord){3, 0});
-		else if (coord_x == map->wdt - 1)
-			return ((t_coord){1, 1});
-		else
-			return ((t_coord){0, 1});
-	}
-	if (coord_x == 0)
-		return ((t_coord){2, 1});
-	return ((t_coord){3, 1});
+	if (!validate_walls(map))
+		return (false);
+	if (cnt < 1)
+		ft_printf("Error\nThe map must contain at least one collectible.\n");
+	if (map->player != 1)
+		ft_printf("Error\nThe map must contain exactly one player position.\n");
+	return (cnt >= 1 && map->exit == 1 && map->player == 1 && path_valid(map));
 }
 
-t_coord	get_inner_sprite(t_map *mp, int y, int x)
-{
-	if (mp->grid[y][x] == '0' || mp->grid[y][x] == 'P' || mp->grid[y][x] == 'C')
-	{
-		if ((rand() % 3) == 0)
-			return ((t_coord){0, 2});
-		else if ((rand() % 3) == 1)
-			return ((t_coord){1, 2});
-		return ((t_coord){2, 2});
-	}
-	else if (mp->grid[y][x] == '1')
-	{
-		if ((rand() % 3) == 0)
-			return ((t_coord){3, 2});
-		else if ((rand() % 3) == 1)
-			return ((t_coord){0, 3});
-		return ((t_coord){1, 3});
-	}
-	else if (mp->grid[y][x] == 'E')
-	{
-		return ((t_coord){2, 3});
-	}
-	return ((t_coord){-1, -1});
-}
-
+/* ************************************************************************** */
+/* Checks if the character at the specified coordinates is valid according to */
+/* the defined valid characters. Updates the collectible and exit counts, and */
+/* player position if applicable. Prints error messages for invalid character.*/
+/* Returns true if valid, false otherwise.                                    */
+/* ************************************************************************** */
 bool	validate_ch(t_map *map, int x, int y, int *cnt)
 {
 	const char	*valid_chars = "01CE\nP";
@@ -89,6 +78,11 @@ bool	validate_ch(t_map *map, int x, int y, int *cnt)
 	return (true);
 }
 
+/* ************************************************************************** */
+/* Checks if the map is properly enclosed by walls (represented by '1') on    */
+/* all sides. Returns true if valid, false otherwise, printing error messages */
+/* if the walls are not correctly positioned or if the map is empty.          */
+/* ************************************************************************** */
 bool	validate_walls(t_map *map)
 {
 	int	y;
@@ -115,32 +109,4 @@ bool	validate_walls(t_map *map)
 		}
 	}
 	return (true);
-}
-
-bool	validate_map(t_map *map)
-{
-	int		y;
-	size_t	x;
-	int		cnt;
-	size_t	row_length;
-
-	cnt = 0;
-	y = -1;
-	while (++y < map->hgt)
-	{
-		row_length = ft_strlen(map->grid[y]);
-		if (row_length != (size_t)map->wdt)
-			return (ft_printf("Error\nNot rectangular map.\n"), false);
-		x = -1;
-		while (++x < row_length)
-			if (!validate_ch(map, (int)x, y, &cnt))
-				return (false);
-	}
-	if (!validate_walls(map))
-		return (false);
-	if (cnt < 1)
-		ft_printf("Error\nThe map must contain at least one collectible.\n");
-	if (map->player != 1)
-		ft_printf("Error\nThe map must contain exactly one player position.\n");
-	return (cnt >= 1 && map->exit == 1 && map->player == 1 && path_valid(map));
 }

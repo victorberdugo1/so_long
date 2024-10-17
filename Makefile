@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/10/16 21:00:05 by victor           ###   ########.fr        #
+#    Updated: 2024/10/17 21:05:02 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,9 @@ LIBFT = libft/libft.a
 MINI = MLX42/build/libmlx42.a
 MINI_BACKUP = $(MINI).backup
 
-SRC = input.c collect.c map_read.c player.c map.c pixel_utils.c \
-      map_utils.c map_validate.c ft_render.c map_path.c \
-      collect_utils.c input_utils.c free.c so_long.c
+SRC = key_hook.c collect.c map_read.c player.c map_setup.c pixel_utils.c \
+      map_tiles.c map_validate.c ft_render.c map_path.c ft_move.c\
+      collect_utils.c resize_hook.c free.c so_long.c 
 
 BONUS_SRC = bonus/so_long_bonus.c bonus/collect_bonus.c bonus/ft_render_bonus.c \
             bonus/map_path_bonus.c bonus/pixel_utils_bonus.c bonus/spike_bonus.c \
@@ -37,10 +37,13 @@ LDFLAGS = $(LIBFT) $(MINI) -lglfw -lm
 
 HBONUS = .bonus
 
-all: libs $(NAME)
+all: libs mlx $(NAME)
 
 libs:
 	@make -C libft
+
+mlx:
+	@cmake MLX42 -B MLX42/build && make -C MLX42/build -j4
 
 $(NAME): $(LIBFT) $(MINI) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS)

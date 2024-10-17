@@ -6,12 +6,37 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:31:26 by victor            #+#    #+#             */
-/*   Updated: 2024/10/14 10:39:34 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/17 18:17:03 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+/* ************************************************************************** */
+/* Initializes collectables from the map, sets player coordinates, counts the */
+/* collectables, and allocates memory for them. Returns 1 on success, 0 on    */
+/* failure. Handles memory allocation errors with an error message.           */
+/* ************************************************************************** */
+int	init_collectables_from_map(t_gdata *gamedata)
+{
+	gamedata->player->xy_p.x = gamedata->map->player_pos.x * TILE_SIZE + 32;
+	gamedata->player->xy_p.y = gamedata->map->player_pos.y * TILE_SIZE + 32;
+	gamedata->coins = count_collectables(gamedata->map);
+	gamedata->map->collects = malloc(sizeof(t_collect) * gamedata->coins);
+	if (!gamedata->map->collects)
+	{
+		ft_printf("Error\nFailed to allocate memory for collectables\n");
+		return (0);
+	}
+	init_collectables(gamedata);
+	return (1);
+}
+
+/* ************************************************************************** */
+/* Counts the number of collectable items ('C') present in the map grid.      */
+/* Iterates through the map's height and width to find and tally the items.   */
+/* Returns the total count of collectables.                                   */
+/* ************************************************************************** */
 int	count_collectables(t_map *map)
 {
 	int	x;
@@ -34,6 +59,11 @@ int	count_collectables(t_map *map)
 	return (count);
 }
 
+/* ************************************************************************** */
+/* Initializes collectables by iterating through the map's grid, locating     */
+/* each collectible ('C'), and storing its position. Allocates memory for     */
+/* collectible positions and initializes each collectible. Exits on failure.  */
+/* ************************************************************************** */
 void	init_collectables(t_gdata *gd)
 {
 	int	x;
@@ -63,21 +93,11 @@ void	init_collectables(t_gdata *gd)
 	}
 }
 
-int	init_collectables_from_map(t_gdata *gamedata)
-{
-	gamedata->player->xy_p.x = gamedata->map->player_pos.x * TILE_SIZE + 32;
-	gamedata->player->xy_p.y = gamedata->map->player_pos.y * TILE_SIZE + 32;
-	gamedata->coins = count_collectables(gamedata->map);
-	gamedata->map->collects = malloc(sizeof(t_collect) * gamedata->coins);
-	if (!gamedata->map->collects)
-	{
-		ft_printf("Error\nFailed to allocate memory for collectables\n");
-		return (0);
-	}
-	init_collectables(gamedata);
-	return (1);
-}
-
+/* ************************************************************************** */
+/* Initializes a collectable object by setting its position, scale, and       */
+/* loading the associated texture and image. Manages memory allocation and    */
+/* handles errors by freeing resources if necessary.                          */
+/* ************************************************************************** */
 void	collect_init(t_collect *coll, int x, int y, mlx_t *mlx)
 {
 	coll->xy_c.x = x;

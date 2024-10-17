@@ -1,17 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input.c                                            :+:      :+:    :+:   */
+/*   hook.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 10:26:04 by victor            #+#    #+#             */
-/*   Updated: 2024/10/15 10:26:32 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/17 18:44:23 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+/* ************************************************************************** */
+/* Handles keyboard input and updates player movement and state accordingly.  */
+/* Then handles memory for the player and updates the game state.            */
+/* ************************************************************************** */
 void	set_player_destination(t_player *pl, int *offset, int direction)
 {
 	if (direction == 1)
