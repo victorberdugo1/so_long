@@ -1,5 +1,9 @@
 # so_long
 
+<p align="center">
+  <img src="so_long.jpg" alt="so_long" style="width:60%; margin:auto;" />
+</p>
+
 ## Parte obligatoria
 
 | Aspecto                 | Detalle                                   |
