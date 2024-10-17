@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 17:20:07 by victor            #+#    #+#             */
-/*   Updated: 2024/10/15 21:56:53 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/16 21:51:29 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	spike_collision(void *param)
 	calculate_spike_pos(gd, angle, &spike_pos);
 	delta_x = spike_pos.x - (gd->window_width / 2);
 	delta_y = spike_pos.y - (gd->window_height / 2);
-	if (sqrt(delta_x * delta_x + delta_y * delta_y) < (8 * gd->map->scale))
+	if (sqrt(delta_x * delta_x + delta_y * delta_y) < (32 * gd->map->scale))
 	{
 		ft_printf("Ouch! The spike got you!\n Game Over.\n");
 		exit(EXIT_FAILURE);

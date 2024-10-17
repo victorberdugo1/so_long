@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/16 18:24:02 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/17 02:26:01 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,14 @@ t_coord	get_inner_sprite(t_map *mp, int y, int x)
 	return ((t_coord){-1, -1});
 }
 
-bool	validate(t_map *map, int x, int y, int *cnt)
+bool	validate_ch(t_map *map, int x, int y, int *cnt)
 {
 	const char	*valid_chars = "01CE\nP";
 	char		ch;
 
 	ch = map->grid[y][x];
 	if (!ft_strchr(valid_chars, ch))
-	{
-		ft_printf("Error\nInvalid character '%c' in the map.\n", ch);
-		return (false);
-	}
+		return (ft_printf("Error\nInvalid character '%c'.\n", ch), false);
 	if (ch == 'C')
 		(*cnt)++;
 	else if (ch == 'E')
@@ -80,6 +77,8 @@ bool	validate(t_map *map, int x, int y, int *cnt)
 		map->exit++;
 		map->exit_pos.x = x;
 		map->exit_pos.y = y;
+		if (map->exit > 1)
+			ft_printf("Error\nThe map must contain exactly one exit.\n");
 	}
 	else if (ch == 'P')
 	{
@@ -90,28 +89,58 @@ bool	validate(t_map *map, int x, int y, int *cnt)
 	return (true);
 }
 
-bool	validate_map(t_map *map)
+bool	validate_walls(t_map *map)
 {
 	int	y;
 	int	x;
-	int	cnt;
+
+	if (map->hgt == 0 || map->wdt == 0)
+		return (ft_printf("Error\nThe map cannot be empty.\n"), false);
+	x = -1;
+	while (++x < map->wdt - 1)
+	{
+		if (map->grid[0][x] != '1' || map->grid[map->hgt - 1][x] != '1')
+		{
+			ft_printf("Error\nThe map must be closed by walls.\n");
+			return (false);
+		}
+	}
+	y = -1;
+	while (++y < map->hgt)
+	{
+		if (map->grid[y][0] != '1' || map->grid[y][map->wdt - 2] != '1')
+		{
+			ft_printf("Error\nThe map must be closed by walls.\n");
+			return (false);
+		}
+	}
+	return (true);
+}
+
+bool	validate_map(t_map *map)
+{
+	int		y;
+	size_t	x;
+	int		cnt;
+	size_t	row_length;
 
 	cnt = 0;
 	y = -1;
 	while (++y < map->hgt)
 	{
+		row_length = ft_strlen(map->grid[y]);
+		if (row_length != (size_t)map->wdt)
+			return (ft_printf("Error\nNot rectangular map.\n"), false);
 		x = -1;
-		while (++x < map->wdt)
-			if (!validate(map, x, y, &cnt))
+		while (++x < row_length)
+			if (!validate_ch(map, (int)x, y, &cnt))
 				return (false);
-		if ((size_t)ft_strlen(map->grid[y]) != (size_t)map->wdt)
-			return (ft_printf("Error\nThe map is not rectangular.\n"), false);
 	}
+	if (!validate_walls(map))
+		return (false);
 	if (cnt < 1)
 		ft_printf("Error\nThe map must contain at least one collectible.\n");
-	else if (map->exit != 1)
-		ft_printf("Error\nThe map must contain exactly one exit.\n");
-	else if (map->player != 1)
+	if (map->player != 1)
 		ft_printf("Error\nThe map must contain exactly one player position.\n");
 	return (cnt >= 1 && map->exit == 1 && map->player == 1 && path_valid(map));
 }

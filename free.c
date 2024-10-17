@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 07:50:05 by victor            #+#    #+#             */
-/*   Updated: 2024/10/16 18:03:12 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/16 22:44:12 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ void	free_map(t_map *map, t_gdata *gd)
 		if (map->grid[i])
 			free(map->grid[i]);
 	free(map->grid);
-	map->grid = NULL;
 	if (map->collectible_pos)
 		free(map->collectible_pos);
 	if (map->collects)

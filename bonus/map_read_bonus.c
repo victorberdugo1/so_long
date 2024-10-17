@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/16 10:27:56 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/17 01:52:25 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,11 @@ t_map	*read_map(const char *filename)
 	int		height;
 	t_map	*map;
 	int		len;
+	int		i;
 
 	len = ft_strlen(filename);
 	if (len < 4 || ft_strncmp(&filename[len - 4], ".ber", 4) != 0)
-	{
-		perror("Error: File extension must be .ber");
-		return (NULL);
-	}
+		return (perror("Error\nFile extension must be .ber"), NULL);
 	if (map_size(filename, &width, &height) < 0)
 		return (NULL);
 	map = init_map(width, height);
@@ -32,7 +30,13 @@ t_map	*read_map(const char *filename)
 		return (NULL);
 	map = fill_map(filename, width, map);
 	if (!validate_map(map))
-		return (free(map), NULL);
+	{
+		i = -1;
+		while (++i < height)
+			if (map->grid[i])
+				free(map->grid[i]);
+		return (free(map->grid), free(map), NULL);
+	}
 	return (map);
 }
 
@@ -46,7 +50,7 @@ int	map_size(const char *filename, int *width, int *height)
 	*height = 0;
 	file = open(filename, O_RDONLY);
 	if (file < 0)
-		return (perror("Error opening the file"), -1);
+		return (perror("Error\nOpening the file"), -1);
 	line = get_next_line(file);
 	while (line != NULL)
 	{
@@ -54,7 +58,7 @@ int	map_size(const char *filename, int *width, int *height)
 			*width = ft_strlen(line);
 		temp_width = ft_strlen(line);
 		if (temp_width != *width)
-			return (free(line), close(file), -1);
+			return (ft_printf("Error\nBad line"), free(line), close(file), -1);
 		(*height)++;
 		free(line);
 		line = get_next_line(file);
@@ -72,13 +76,13 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 
 	file = open(filename, O_RDONLY);
 	if (file < 0)
-		return (perror("Error opening the file"), free(map), NULL);
+		return (free(map), NULL);
 	h = 0;
 	line = get_next_line(file);
 	while (line != NULL)
 	{
 		w = -1;
-		while (++w < width)
+		while (++w < width && line[w] != '\0')
 		{
 			map->grid[h][w] = line[w];
 			if (line[w] == 'P')
@@ -88,7 +92,8 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 		h++;
 		line = get_next_line(file);
 	}
-	return (close(file), map);
+	close(file);
+	return (map);
 }
 
 char	**allocate_grid(int width, int height)
@@ -98,16 +103,21 @@ char	**allocate_grid(int width, int height)
 
 	grid = malloc(height * sizeof(char *));
 	if (!grid)
+	{
+		ft_printf("Error\nFailed to allocate memory for grid.\n");
 		return (NULL);
+	}
 	i = 0;
 	while (i < height)
 	{
 		grid[i] = malloc(width * sizeof(char));
 		if (!grid[i])
 		{
+			ft_printf("Error\nFailed to allocate memory for grid row.\n");
 			while (i > 0)
 				free(grid[--i]);
-			return (free(grid), NULL);
+			free(grid);
+			return (NULL);
 		}
 		i++;
 	}
@@ -120,7 +130,10 @@ t_map	*init_map(int width, int height)
 
 	map = malloc(sizeof(t_map));
 	if (!map)
+	{
+		ft_printf("Error\nFailed to allocate memory for map.\n");
 		return (NULL);
+	}
 	map->wdt = width;
 	map->hgt = height;
 	map->exit = 0;
@@ -130,7 +143,10 @@ t_map	*init_map(int width, int height)
 	map->collect_flag = false;
 	map->grid = allocate_grid(width, height);
 	if (!map->grid)
-		return (free(map), NULL);
+	{
+		free(map);
+		return (NULL);
+	}
 	map->player_pos.x = -1;
 	map->player_pos.y = -1;
 	return (map);
