@@ -6,13 +6,12 @@
 
 ## Parte obligatoria
 
-| Aspecto                 | Detalle                                   |
+| **Nombre** | **`so_long`**                                 |
 |-------------------------|-------------------------------------------|
-| **Nombre del Programa** | `so_long`                                 |
-| **Archivos a Entregar** | Makefile, `*.h`, `*.c`, maps, textures   |
+| **Archivos** | Makefile, `*.h`, `*.c`, maps, textures   |
 | **Makefile**            | Debe incluir las reglas: `NAME`, `all`, `clean`, `fclean`, `re`, `bonus` |
 | **Argumentos**          | Un mapa en formato `*.ber`                |
-| **Funciones Permitidas**| `open`, `close`, `read`, `write`, `malloc`, `free`, `perror`, `strerror`, `exit`, todas las funciones de la librería math (flag del compilador -lm), todas las funciones de la miniLibX, `ft_printf` y cualquier función equivalente que tú hayas escrito |
+| **Funciones Permitidas**| `open`, `close`, `read`, `write`, `malloc`, `free`, `perror`, `strerror`, `exit`, todas las funciones de la librería math (flag del compilador -lm), todas las funciones de la miniLibX, `ft_printf` |
 | **Uso de libft**        | Permitido                                 |
 | **Descripción**         | Crear un juego 2D donde un delfín escape del planeta Tierra después de comer pescado. |
 
