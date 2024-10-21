@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/21 18:33:56 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/21 22:33:26 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ bool	validate_map(t_map *map)
 	y = -1;
 	while (++y < map->hgt)
 	{
-		if (ft_strlen(map->grid[y]) != (size_t)map->wdt)
-			return (ft_printf("Error\nNot rectangular map.\n"), false);
+		//if (ft_strlen(map->grid[y]) != (size_t)map->wdt)
+		//	return (ft_printf("Error\nNot rectangular map.\n"), false);
 		x = -1;
 		while (++x < ft_strlen(map->grid[y]))
 			if (!validate_ch(map, (int)x, y, &cnt))

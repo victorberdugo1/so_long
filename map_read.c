@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/17 12:12:51 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/21 22:53:38 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_map	*read_map(const char *filename)
 
 	len = ft_strlen(filename);
 	if (len < 4 || ft_strncmp(&filename[len - 4], ".ber", 4) != 0)
-		return (perror("Error\nFile extension must be .ber"), NULL);
+		return (perror("Error\nFile extension must be .ber\nExit"), NULL);
 	if (map_size(filename, &width, &height) < 0)
 		return (NULL);
 	map = init_map(width, height);
