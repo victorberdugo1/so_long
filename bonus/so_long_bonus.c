@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/16 08:41:56 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/21 18:41:05 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	init_game(int argc, char **argv, t_gdata *gamedata, t_player *player)
 	if (!gamedata->map)
 		return (ft_printf("Invalid map\n"), EXIT_FAILURE);
 	mlx_set_setting(MLX_MAXIMIZED, true);
-	mlx = mlx_init(WIDTH, HEIGHT, "so_long", true);
+	mlx = mlx_init(WIDTH, HEIGHT, "so_long", false);
 	if (!mlx)
 		return (EXIT_FAILURE);
 	map_start(gamedata->map, mlx);

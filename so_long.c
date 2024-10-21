@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:20:27 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/17 01:16:46 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/21 18:39:29 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv)
 	if (!gamedata.map)
 		return (EXIT_FAILURE);
 	mlx_set_setting(MLX_MAXIMIZED, true);
-	mlx = mlx_init(WIDTH, HEIGHT, "so_long", true);
+	mlx = mlx_init(WIDTH, HEIGHT, "so_long", false);
 	if (!mlx)
 		return (EXIT_FAILURE);
 	map_start(gamedata.map, mlx);

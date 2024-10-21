@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/17 02:25:32 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/21 18:39:04 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ bool	validate_ch(t_map *map, int x, int y, int *cnt)
 		map->exit++;
 		map->exit_pos.x = x;
 		map->exit_pos.y = y;
-		if (map->exit > 1)
-			ft_printf("Error\nThe map must contain exactly one exit.\n");
 	}
 	else if (ch == 'P')
 	{
@@ -122,17 +120,15 @@ bool	validate_map(t_map *map)
 	int		y;
 	size_t	x;
 	int		cnt;
-	size_t	row_length;
 
 	cnt = 0;
 	y = -1;
 	while (++y < map->hgt)
 	{
-		row_length = ft_strlen(map->grid[y]);
-		if (row_length != (size_t)map->wdt)
+		if (ft_strlen(map->grid[y]) != (size_t)map->wdt)
 			return (ft_printf("Error\nNot rectangular map.\n"), false);
 		x = -1;
-		while (++x < row_length)
+		while (++x < ft_strlen(map->grid[y]))
 			if (!validate_ch(map, (int)x, y, &cnt))
 				return (false);
 	}
@@ -142,5 +138,7 @@ bool	validate_map(t_map *map)
 		ft_printf("Error\nThe map must contain at least one collectible.\n");
 	if (map->player != 1)
 		ft_printf("Error\nThe map must contain exactly one player position.\n");
+	if (map->exit != 1)
+		ft_printf("Error\nThe map must contain exactly one exit.\n");
 	return (cnt >= 1 && map->exit == 1 && map->player == 1 && path_valid(map));
 }
