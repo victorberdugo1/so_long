@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/21 18:39:04 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/23 21:19:04 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ bool	validate_walls(t_map *map)
 	y = -1;
 	while (++y < map->hgt)
 	{
-		if (map->grid[y][0] != '1' || map->grid[y][map->wdt - 2] != '1')
+		if (map->grid[y][0] != '1' || map->grid[y][map->wdt - 1] != '1')
 		{
 			ft_printf("Error\nThe map must be closed by walls.\n");
 			return (false);
