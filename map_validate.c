@@ -6,7 +6,7 @@
 /*   By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 15:05:41 by vberdugo          #+#    #+#             */
-/*   Updated: 2024/10/22 09:29:09 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/23 16:42:52 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 bool	validate_map(t_map *map)
 {
 	int		y;
-	size_t	x;
+	int		x;
 	int		cnt;
 
 	cnt = 0;
@@ -28,7 +28,7 @@ bool	validate_map(t_map *map)
 	while (++y < map->hgt)
 	{
 		x = -1;
-		while (++x < ft_strlen(map->grid[y]))
+		while (++x < (int)ft_strlen(map->grid[y]))
 			if (!validate_ch(map, (int)x, y, &cnt))
 				return (false);
 	}

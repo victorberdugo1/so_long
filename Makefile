@@ -6,7 +6,7 @@
 #    By: vberdugo <vberdugo@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 16:20:05 by vberdugo          #+#    #+#              #
-#    Updated: 2024/10/17 21:05:02 by victor           ###   ########.fr        #
+#    Updated: 2024/10/23 17:31:03 by vberdugo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,8 @@ OBJ = $(SRC:.c=.o)
 BONUS_OBJ = $(BONUS_SRC:%.c=%.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc -g
+CFLAGS = -Wall -Wextra -Werror -Ilibft -Iinc  #-g -fsanitize=address
+
 LDFLAGS = $(LIBFT) $(MINI) -lglfw -lm
 
 HBONUS = .bonus
