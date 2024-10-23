@@ -26,8 +26,8 @@
 # define LONG_MIN -2147483648L
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
-# define WIDTH 800
-# define HEIGHT 600
+# define WIDTH 3839 
+# define HEIGHT 1881
 # define TILE_SIZE 64
 
 typedef struct s_coord
