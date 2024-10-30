@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/30 15:14:13 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:29:35 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ char	**allocate_grid(int width, int height)
 	i = 0;
 	while (i < height)
 	{
-		grid[i] = malloc(width * sizeof(char));
+		grid[i] = malloc(width * sizeof(char) + 1);
 		if (!grid[i])
 		{
 			ft_printf("Error\nFailed to allocate memory for grid row.\n");
