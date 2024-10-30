@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/23 21:18:42 by victor           ###   ########.fr       */
+/*   Updated: 2024/10/30 13:44:27 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int	map_size(const char *filename, int *width, int *height)
 	while (line != NULL)
 	{
 		if (*width == -1)
-			*width = ft_strlen(line) -1;
-		temp_width = ft_strlen(line) -1;
+			*width = ft_strlen(line) - 1;
+		temp_width = ft_strlen(line) - 1;
 		if (temp_width != *width)
 			return (ft_printf("Error\nBad line"), free(line), close(file), -1);
 		(*height)++;
