@@ -6,7 +6,7 @@
 /*   By: victor <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:22:38 by victor            #+#    #+#             */
-/*   Updated: 2024/10/30 15:30:03 by vberdugo         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:38:49 by vberdugo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,12 @@ t_map	*fill_map(const char *filename, int width, t_map *map)
 			if (line[w] == 'P')
 				map->player_pos = (t_coord){w, h};
 		}
+		map->grid[h][w] = '\0';
 		free(line);
 		h++;
 		line = get_next_line(file);
 	}
-	close(file);
-	return (map);
+	return (close(file), map);
 }
 
 char	**allocate_grid(int width, int height)
